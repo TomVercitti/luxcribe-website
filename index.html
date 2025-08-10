@@ -6,31 +6,34 @@
     <title>Luxcribe - Custom Laser Engraving</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Font: Lato for a clean, modern look (less rounded than Inter) -->
-    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Google Fonts: Lato for a clean, modern look and Playfair Display for titles -->
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <style>
         /* Base styles for the dark theme */
         body {
-            font-family: 'Lato', sans-serif; /* Changed font to Lato */
-            background-color: #0a0a0a; /* Very dark background for the entire page */
-            color: #e0e0e0; /* Light grey text for contrast */
+            font-family: 'Lato', sans-serif;
+            background-color: #0a0a0a;
+            color: #e0e0e0;
             line-height: 1.6;
-            overflow-x: hidden; /* Prevent horizontal scroll */
-            padding-top: 0; /* No padding-top needed as header is not fixed */
+            overflow-x: hidden;
+            padding-top: 0;
+        }
+        h1, h2, h3, h4 {
+            font-family: 'Playfair Display', serif;
         }
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 2rem; /* Increased general padding for more breathing room */
+            padding: 2rem;
         }
         .section-title {
             font-weight: 700;
-            color: #ffffff; /* White text for main section titles */
-            margin-bottom: 4rem; /* Increased margin below section titles */
+            color: #ffffff;
+            margin-bottom: 4rem;
         }
         /* Primary button styling */
         .btn-primary {
-            background-color: #6366f1; /* Brighter indigo for buttons */
+            background-color: #6366f1;
             color: white;
             padding: 0.75rem 1.5rem;
             border-radius: 0.5rem;
@@ -38,37 +41,37 @@
             transition: background-color 0.3s ease, transform 0.2s ease;
         }
         .btn-primary:hover {
-            background-color: #4f46e5; /* Darker indigo on hover */
-            transform: translateY(-2px); /* Slight lift effect on hover */
+            background-color: #4f46e5;
+            transform: translateY(-2px);
         }
-        /* Card styling for services and payment options - more seamless and subtle shadow */
+        /* Card styling for services and payment options */
         .card {
-            background-color: #121212; /* Slightly lighter dark for cards, closer to background */
-            border-radius: 0.75rem; /* Rounded corners for cards */
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Even softer shadow for seamless look */
+            background-color: #121212;
+            border-radius: 0.75rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
             overflow: hidden;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
         .card:hover {
-            transform: translateY(-3px); /* Slightly less lift effect on card hover */
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4); /* Enhanced shadow on hover */
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
         }
 
         /* Hero video specific styles */
         .hero-video-container {
             position: relative;
             width: 100%;
-            height: 70vh; /* Make it taller for more impact */
-            min-height: 400px; /* Minimum height for smaller screens */
+            height: 70vh;
+            min-height: 400px;
             overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
             color: white;
-            border-radius: 0 0 1.5rem 1.5rem; /* Rounded bottom corners */
+            border-radius: 0 0 1.5rem 1.5rem;
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
-            margin-top: 0; /* No negative margin as header is no longer fixed */
+            margin-top: 0;
         }
         .hero-video {
             position: absolute;
@@ -78,10 +81,10 @@
             min-height: 100%;
             width: auto;
             height: auto;
-            z-index: -1; /* Place video behind content */
+            z-index: -1;
             transform: translate(-50%, -50%);
             background-size: cover;
-            filter: brightness(0.9); /* Increased brightness for better visibility */
+            filter: brightness(0.9);
         }
         .video-overlay {
             position: absolute;
@@ -89,109 +92,122 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.3); /* More translucent overlay for video visibility */
-            z-index: 0; /* Place overlay between video and content */
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 0;
         }
         .hero-content {
             position: relative;
-            z-index: 1; /* Ensure content is above overlay */
+            z-index: 1;
             padding: 2rem;
             max-width: 800px;
         }
         .hero-content h2 {
-            font-size: 4.5rem; /* Slightly larger for impact */
+            font-size: 4.5rem;
             line-height: 1.1;
-            margin-bottom: 1rem; /* Reduced margin for tighter look */
+            margin-bottom: 1rem;
         }
         .hero-content p {
-            font-size: 1.5rem; /* Slightly larger for readability */
-            opacity: 0.95; /* Increased opacity for better contrast */
+            font-size: 1.5rem;
+            opacity: 0.95;
         }
 
         /* Specific styles for header links on dark background */
         header a {
-            color: #e0e0e0; /* Light text for header links */
+            color: #e0e0e0;
             position: relative;
             padding-bottom: 0.25rem;
-            transition: color 0.3s ease; /* Smooth color transition on hover */
+            transition: color 0.3s ease;
         }
         header a:hover {
-            color: #6366f1; /* Indigo on hover */
+            color: #6366f1;
         }
         /* Underline for active navigation link */
         header a.active-nav-link {
-            color: #6366f1; /* Active link color */
+            color: #6366f1;
         }
         header a.active-nav-link::after {
             content: '';
             position: absolute;
-            width: 100%; /* Always full width for active link */
+            width: 100%;
             height: 2px;
             bottom: 0;
             left: 0;
-            background-color: #6366f1; /* Underline color */
-            transition: width 0.3s ease-out; /* Smooth transition for consistency */
+            background-color: #6366f1;
+            transition: width 0.3s ease-out;
         }
         header a:not(.active-nav-link)::after {
             content: '';
             position: absolute;
-            width: 0; /* No width for inactive links */
+            width: 0;
             height: 2px;
             bottom: 0;
             left: 0;
-            background-color: #6366f1; /* Underline color */
+            background-color: #6366f1;
             transition: width 0.3s ease-out;
         }
         header a:not(.active-nav-link):hover::after {
-            width: 100%; /* Expands underline on hover for inactive links */
+            width: 100%;
         }
 
         /* Styles for the logo text within the SVG to ensure Lato font is applied */
         .logo-text {
-            font-family: 'Lato', sans-serif; /* Ensure Lato font is applied */
-            letter-spacing: -0.02em; /* Tighten letter spacing for a more unified word */
+            font-family: 'Lato', sans-serif;
+            letter-spacing: -0.02em;
         }
 
-        /* New styles for the waterfall steps */
-        .waterfall-step {
-            position: relative;
-            padding-bottom: 3rem; /* Space for the connector */
-            margin-bottom: 2rem; /* Space between steps */
-        }
-        .waterfall-step:not(:last-child)::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 2px; /* Thickness of the line */
-            height: 2rem; /* Length of the line */
-            background-color: #4f46e5; /* Color of the line */
-            border-radius: 9999px; /* Rounded ends for the line */
-        }
-        .waterfall-step-content {
-            background-color: #121212;
-            border-radius: 0.75rem;
+        /* --- Form specific styles for blending --- */
+        .form-section {
+            background-color: #121212; /* Match card background */
+            padding: 2.5rem;
+            border-radius: 1rem;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-            padding: 2rem;
-            text-align: center;
-            max-width: 400px; /* Limit width for better readability in vertical flow */
-            margin: 0 auto; /* Center the step content */
         }
-        .waterfall-step-number {
-            width: 3rem;
-            height: 3rem;
-            background-color: #6366f1;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin: 0 auto 1.5rem auto; /* Center number and add margin below */
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        .form-input, .form-select, textarea {
+            background-color: #1a1a1a; /* Slightly darker than card for contrast */
+            color: #e0e0e0;
+            border: 1px solid #333;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
+        .form-input:focus, .form-select:focus, textarea:focus {
+            border-color: #6366f1; /* Match button color for focus */
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+            outline: none;
+        }
+        .form-section-title {
+            background-color: #1a1a1a;
+            color: #ffffff;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+        .page-content {
+            display: none;
+        }
+        .page-content.active {
+            display: block;
+        }
+        .btn-secondary {
+            background-color: #333;
+            color: #e0e0e0;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            transition: all 0.2s;
+        }
+        .btn-secondary:hover {
+            background-color: #444;
+        }
+        .progress-bar {
+            background-color: #333;
+        }
+        .progress-bar-fill {
+            background-color: #6366f1; /* Match primary button color */
+        }
+
     </style>
 </head>
 <body>
@@ -206,7 +222,7 @@
             <nav>
                 <ul class="flex space-x-6">
                     <li><a href="#services" class="font-medium nav-link">Services</a></li>
-                    <li><a href="#how-to-order" class="font-medium nav-link">How to Order</a></li>
+                    <li><a href="#how-to-order" class="font-medium nav-link">Start Order</a></li>
                     <li><a href="#payments" class="font-medium nav-link">Payments</a></li>
                     <li><a href="#contact" class="font-medium nav-link">Contact</a></li>
                 </ul>
@@ -320,50 +336,107 @@
 
     <!-- How to Order Section - Waterfall Layout -->
     <section id="how-to-order" class="py-20 bg-gray-950">
-        <div class="container">
-            <h3 class="section-title text-4xl md:text-5xl text-center">How to Place Your Custom Order</h3>
-            <div class="flex flex-col items-center"> <!-- Changed to flex-col for vertical layout -->
-                <!-- Step 1 -->
-                <div class="waterfall-step">
-                    <div class="waterfall-step-content">
-                        <div class="waterfall-step-number">1</div>
-                        <h4 class="font-bold text-2xl mb-2 text-gray-100">Fill Out Our Order Form</h4>
-                        <p class="text-gray-400 mb-4">Start by providing your design ideas, text, images, and contact details in our simple Google Form.</p>
-                        <a href="https://forms.gle/crvyy7CGxwzv6afs6" target="_blank" class="btn-primary text-sm">Fill Out Order Form</a>
+        <div class="container flex flex-col items-center">
+            <h3 class="section-title text-4xl md:text-5xl text-center">Start Your Custom Order</h3>
+            
+            <!-- The form is now embedded here -->
+            <div class="bg-[#0a0a0a] p-8 md:p-12 rounded-2xl w-full max-w-2xl mt-8">
+                <p class="text-center text-gray-400 mb-8">Please provide details for your custom laser engraving project. We'll send a design proof and payment instructions after submission.</p>
+
+                <!-- The 'netlify' attribute is what makes this a Netlify Form -->
+                <form name="custom-order-request" netlify-honeypot="bot-field" netlify method="POST" action="/success" class="space-y-6">
+                    <input type="hidden" name="form-name" value="custom-order-request" />
+                    <p class="hidden">
+                        <label>Don’t fill this out: <input name="bot-field" /></label>
+                    </p>
+
+                    <!-- Page 1 of the form -->
+                    <div id="page-1" class="page-content active">
+                        <div class="form-section-title">Your Full Name *</div>
+                        <input type="text" name="name" id="name" required class="mt-1 block w-full rounded-md shadow-sm sm:text-sm form-input">
+                        
+                        <div class="form-section-title">Your Email Address *</div>
+                        <input type="email" name="email" id="email" required class="mt-1 block w-full rounded-md shadow-sm sm:text-sm form-input">
+
+                        <div class="form-section-title">Phone Number *</div>
+                        <input type="tel" name="phone" id="phone" required class="mt-1 block w-full rounded-md shadow-sm sm:text-sm form-input">
+
+                        <div class="form-section-title">Which Luxcribe Product Would You Like to Customize? *</div>
+                        <select name="product" id="product" required class="mt-1 block w-full rounded-md shadow-sm sm:text-sm form-select">
+                            <option value="">Choose</option>
+                            <option value="Journal">Journal</option>
+                            <option value="Guestbook">Guestbook</option>
+                        </select>
+
+                        <div class="form-section-title">Describe Your Customization (Text, Design Idea, Fonts, Placement) *</div>
+                        <textarea name="custom_design_description" id="custom_design_description" rows="4" required class="mt-1 block w-full rounded-md shadow-sm sm:text-sm form-input"></textarea>
+                        
+                        <div class="form-section-title">Upload Your Image/Logo (if applicable)</div>
+                        <p class="text-sm text-gray-500 mb-2">Upload 1 supported file: PDF, drawing or image. Max 100 MB.</p>
+                        <input type="file" name="custom_design_file" id="custom_design_file" class="mt-1 block w-full text-sm text-gray-500
+                            file:mr-4 file:py-2 file:px-4
+                            file:rounded-full file:border-0
+                            file:text-sm file:font-semibold
+                            file:bg-blue-50 file:text-blue-700
+                            hover:file:bg-blue-100">
+
+                        <div class="form-section-title">How would you like to receive your order? *</div>
+                        <div class="mt-2 space-y-2">
+                            <div class="flex items-center">
+                                <input type="radio" name="delivery_method" id="local_pickup" value="Local Pickup (from flex/your location)" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300" required>
+                                <label for="local_pickup" class="ml-3 block text-sm font-medium text-gray-400">Local Pickup (from flex/your location)</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="radio" name="delivery_method" id="ship_to_me" value="Ship to Me (Australia-wide)" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300">
+                                <label for="ship_to_me" class="ml-3 block text-sm font-medium text-gray-400">Ship to Me (Australia-wide)</label>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <!-- Step 2 -->
-                <div class="waterfall-step">
-                    <div class="waterfall-step-content">
-                        <div class="waterfall-step-number">2</div>
-                        <h4 class="font-bold text-2xl mb-2 text-gray-100">Choose Your Product</h4>
-                        <p class="text-gray-400">Browse our services and select the perfect item you'd like to personalize.</p>
+
+                    <!-- Page 2 of the form -->
+                    <div id="page-2" class="page-content">
+                        <div class="form-section-title">Shipping Details</div>
+                        <div>
+                            <label for="street_address" class="block text-sm font-medium text-gray-400">Street Address *</label>
+                            <input type="text" name="street_address" id="street_address" class="mt-1 block w-full rounded-md shadow-sm sm:text-sm form-input">
+                        </div>
+                        <div>
+                            <label for="apartment_suite" class="block text-sm font-medium text-gray-400">Building/Unit/Apartment *</label>
+                            <input type="text" name="apartment_suite" id="apartment_suite" class="mt-1 block w-full rounded-md shadow-sm sm:text-sm form-input">
+                        </div>
+                        <div>
+                            <label for="postcode" class="block text-sm font-medium text-gray-400">Postcode *</label>
+                            <input type="text" name="postcode" id="postcode" class="mt-1 block w-full rounded-md shadow-sm sm:text-sm form-input">
+                        </div>
+                        <div>
+                            <label for="suburb" class="block text-sm font-medium text-gray-400">Suburb *</label>
+                            <input type="text" name="suburb" id="suburb" class="mt-1 block w-full rounded-md shadow-sm sm:text-sm form-input">
+                        </div>
+                        <div>
+                            <span class="text-sm font-medium text-gray-400">State *</span>
+                            <div class="mt-2 space-y-2">
+                                <div class="flex items-center"><input type="radio" name="state" id="state-nsw" value="New South Wales (NSW)" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"><label for="state-nsw" class="ml-3 block text-sm font-medium text-gray-400">New South Wales (NSW)</label></div>
+                                <div class="flex items-center"><input type="radio" name="state" id="state-qld" value="Queensland (QLD)" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"><label for="state-qld" class="ml-3 block text-sm font-medium text-gray-400">Queensland (QLD)</label></div>
+                                <div class="flex items-center"><input type="radio" name="state" id="state-sa" value="South Australia (SA)" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"><label for="state-sa" class="ml-3 block text-sm font-medium text-gray-400">South Australia (SA)</label></div>
+                                <div class="flex items-center"><input type="radio" name="state" id="state-tas" value="Tasmania (TAS)" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"><label for="state-tas" class="ml-3 block text-sm font-medium text-gray-400">Tasmania (TAS)</label></div>
+                                <div class="flex items-center"><input type="radio" name="state" id="state-vic" value="Victoria (VIC)" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"><label for="state-vic" class="ml-3 block text-sm font-medium text-gray-400">Victoria (VIC)</label></div>
+                                <div class="flex items-center"><input type="radio" name="state" id="state-wa" value="Western Australia (WA)" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"><label for="state-wa" class="ml-3 block text-sm font-medium text-gray-400">Western Australia (WA)</label></div>
+                                <div class="flex items-center"><input type="radio" name="state" id="state-act" value="Australian Capital Territory (ACT)" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"><label for="state-act" class="ml-3 block text-sm font-medium text-gray-400">Australian Capital Territory (ACT)</label></div>
+                                <div class="flex items-center"><input type="radio" name="state" id="state-nt" value="Northern Territory (NT)" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"><label for="state-nt" class="ml-3 block text-sm font-medium text-gray-400">Northern Territory (NT)</label></div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <!-- Step 3 -->
-                <div class="waterfall-step">
-                    <div class="waterfall-step-content">
-                        <div class="waterfall-step-number">3</div>
-                        <h4 class="font-bold text-2xl mb-2 text-gray-100">Approve Your Design</h4>
-                        <p class="text-gray-400">We'll send you a digital proof for your approval. Your go-ahead is essential before we start engraving!</p>
+
+                    <!-- Navigation buttons and progress bar -->
+                    <div class="flex justify-between items-center mt-8 pt-4 border-t-2 border-gray-800">
+                        <button type="button" id="back-button" class="hidden btn-secondary">Back</button>
+                        <div class="flex-grow mx-4 relative h-2 bg-gray-800 rounded-full overflow-hidden">
+                            <div id="progress-bar" class="h-full bg-indigo-600 transition-all duration-300" style="width: 50%;"></div>
+                        </div>
+                        <button type="button" id="next-button" class="btn-primary">Next</button>
+                        <button type="submit" id="submit-button" class="hidden btn-primary">Submit</button>
                     </div>
-                </div>
-                <!-- Step 4 -->
-                <div class="waterfall-step">
-                    <div class="waterfall-step-content">
-                        <div class="waterfall-step-number">4</div>
-                        <h4 class="font-bold text-2xl mb-2 text-gray-100">Secure Your Order</h4>
-                        <p class="text-gray-400">Once approved, we'll provide payment instructions. Payment secures your order and allows us to begin crafting.</p>
-                    </div>
-                </div>
-                <!-- Step 5 -->
-                <div class="waterfall-step">
-                    <div class="waterfall-step-content">
-                        <div class="waterfall-step-number">5</div>
-                        <h4 class="font-bold text-2xl mb-2 text-gray-100">Collect or Get Delivered</h4>
-                        <p class="text-gray-400">We'll notify you when your custom item is ready for pickup or has been shipped to your address.</p>
-                    </div>
-                </div>
+                </form>
             </div>
         </div>
     </section>
@@ -487,6 +560,86 @@
                 });
             });
         });
+
+        // --- Form-specific JavaScript ---
+        const page1 = document.getElementById('page-1');
+        const page2 = document.getElementById('page-2');
+        const backButton = document.getElementById('back-button');
+        const nextButton = document.getElementById('next-button');
+        const submitButton = document.getElementById('submit-button');
+        const progressBar = document.getElementById('progress-bar');
+        const deliveryRadios = document.querySelectorAll('input[name="delivery_method"]');
+
+        let currentPage = 1;
+
+        function updateFormState() {
+            if (currentPage === 1) {
+                page1.classList.add('active');
+                page2.classList.remove('active');
+                backButton.classList.add('hidden');
+                nextButton.classList.remove('hidden');
+                submitButton.classList.add('hidden');
+                progressBar.style.width = '50%';
+            } else if (currentPage === 2) {
+                page1.classList.remove('active');
+                page2.classList.add('active');
+                backButton.classList.remove('hidden');
+                nextButton.classList.add('hidden');
+                submitButton.classList.remove('hidden');
+                progressBar.style.width = '100%';
+            }
+        }
+
+        nextButton.addEventListener('click', () => {
+            const page1Inputs = page1.querySelectorAll('[required]');
+            let allValid = true;
+            page1Inputs.forEach(input => {
+                if (!input.checkValidity()) {
+                    allValid = false;
+                    // Trigger native browser validation UI
+                    input.reportValidity();
+                }
+            });
+
+            if (allValid) {
+                const shipToMeSelected = document.getElementById('ship_to_me').checked;
+                if (shipToMeSelected) {
+                    const shippingInputs = page2.querySelectorAll('input');
+                    shippingInputs.forEach(input => input.setAttribute('required', 'true'));
+                    currentPage = 2;
+                } else {
+                    const form = document.querySelector('form[name="custom-order-request"]');
+                    if (form) {
+                        form.submit();
+                    }
+                }
+                updateFormState();
+            }
+        });
+
+        backButton.addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                updateFormState();
+            }
+        });
+        
+        deliveryRadios.forEach(radio => {
+            radio.addEventListener('change', () => {
+                const shippingInputs = page2.querySelectorAll('input');
+                if (radio.value === 'Ship to Me (Australia-wide)') {
+                    shippingInputs.forEach(input => {
+                        input.setAttribute('required', 'true');
+                    });
+                } else {
+                    shippingInputs.forEach(input => {
+                        input.removeAttribute('required');
+                    });
+                }
+            });
+        });
+
+        updateFormState();
     </script>
 </body>
 </html>
