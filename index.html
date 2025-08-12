@@ -39,8 +39,6 @@
         .page { display: none; animation: fadeIn 0.5s; }
         .page.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        #sticky-add-to-cart { position: sticky; bottom: 0; background-color: rgba(18, 18, 18, 0.95); backdrop-filter: blur(10px); padding: 1rem; border-top: 1px solid #333; box-shadow: 0 -4px 10px rgba(0,0,0,0.3); transform: translateY(100%); transition: transform 0.3s ease-in-out; z-index: 40; }
-        #sticky-add-to-cart.visible { transform: translateY(0); }
         .tab-button { padding: 0.75rem 1.5rem; border-bottom: 2px solid transparent; transition: all 0.3s; }
         .tab-button.active { border-bottom-color: #6366f1; color: #6366f1; }
         .tab-content { display: none; }
@@ -63,7 +61,7 @@
     <header id="main-header" class="bg-black bg-opacity-50 backdrop-blur-sm shadow-lg py-2 w-full z-50 rounded-b-lg sticky top-0">
         <div class="container flex justify-between items-center">
             <a href="#" class="nav-link" data-page="home"><img src="https://github.com/TomVercitti/luxcribe-website/blob/main/AT_WORK__1_-removebg-preview.png?raw=true" alt="Luxcribe Logo" class="h-12 md:h-16 w-auto object-contain"></a>
-            <nav>
+            <nav class="hidden md:flex">
                 <ul class="flex space-x-6 items-center">
                     <li><a href="#" class="font-medium nav-link" data-page="home">Home</a></li>
                     <li class="dropdown">
@@ -82,6 +80,17 @@
                     </li>
                 </ul>
             </nav>
+            <div class="md:hidden">
+                <button id="mobile-menu-button" class="text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </div>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden">
+             <a href="#" class="block py-2 px-4 text-sm hover:bg-gray-700 nav-link" data-page="home">Home</a>
+             <a href="#" class="block py-2 px-4 text-sm hover:bg-gray-700 nav-link" data-page="shop">Shop</a>
+             <a href="#" class="block py-2 px-4 text-sm hover:bg-gray-700 nav-link" data-page="custom-form">Customize an Order</a>
+             <a href="#" class="block py-2 px-4 text-sm hover:bg-gray-700 nav-link" data-page="contact">Contact</a>
         </div>
     </header>
 
@@ -131,7 +140,7 @@
     </footer>
 
     <!-- Modals -->
-    <div id="confirmation-modal" class="modal"><div class="modal-content relative"><span class="close-button absolute top-4 right-6">&times;</span><p id="modal-message" class="text-lg mt-4"></p></div></div>
+    <div id="confirmation-modal" class="modal"><div class="modal-content relative"><span class="close-button absolute top-4 right-6">&times;</span><div id="modal-message-content"></div></div></div>
     <div id="cart-modal" class="modal"><div class="modal-content relative"><div class="flex justify-between items-center mb-6"><h3 class="text-2xl font-bold text-white">Your Shopping Cart</h3><span class="close-button absolute top-4 right-6">&times;</span></div><div id="cart-items-container" class="space-y-4"></div><div id="cart-footer" class="mt-6 pt-4 border-t border-gray-700"></div></div></div>
     <div id="review-modal" class="modal"><div class="modal-content relative"><span class="close-button absolute top-4 right-6">&times;</span><div id="review-form-container"></div></div></div>
 
@@ -141,20 +150,16 @@
         import { getFirestore, collection, addDoc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // --- FIREBASE SETUP ---
-        // Check for Canvas-injected config, otherwise use placeholder for live deployment
-        const firebaseConfig = typeof __firebase_config !== 'undefined' 
-            ? JSON.parse(__firebase_config) 
-            : {
-                apiKey: "YOUR_API_KEY",
-                authDomain: "YOUR_AUTH_DOMAIN",
-                projectId: "YOUR_PROJECT_ID",
-                storageBucket: "YOUR_STORAGE_BUCKET",
-                messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-                appId: "YOUR_APP_ID"
-            };
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "YOUR_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
             
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+        const appId = 'default-app-id';
         
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
@@ -203,9 +208,9 @@
                     { id: 'co-015', name: 'Heat-Resistant Bamboo Coaster', price: 25.00, type: 'custom', images: ['https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/35_luxscribe_wooden_coaster_holder.jpg'], description: 'A durable bamboo coaster with a silicone base.', specs: {'Material': 'Bamboo & Silicone'} },
                     { id: 'co-016', name: 'Engraved Tile Coasters', price: 27.50, type: 'custom', images: ['https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/36_luxscribe_round_wooden_logo_coasters.jpg'], description: 'Your design engraved on ceramic tile coasters.', specs: {'Material': 'Ceramic'} },
                     { id: 'co-017', name: 'Coaster Set with Engraved Holder', price: 50.00, type: 'custom', images: ['https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/37_luxscribe_cheers_wooden_bottle_opener.jpg'], description: 'A full set of coasters with a matching engraved stand.', specs: {'Material': 'Varies'} },
-                    { id: 'co-018', name: 'Puzzle Coasters', price: 40.00, type: 'custom', images: ['https://placehold.co/600x400/121212/e0e0e0?text=Puzzle+Coasters'], description: 'A fun set of interlocking puzzle coasters.', specs: {'Material': 'Wood'} },
-                    { id: 'co-019', name: 'Themed Coasters', price: 26.00, type: 'custom', images: ['https://placehold.co/600x400/121212/e0e0e0?text=Themed+Coasters'], description: 'Coasters themed around sports, hobbies, or landmarks.', specs: {'Material': 'Varies'} },
-                    { id: 'co-020', name: 'Coaster & Bottle Opener Combo', price: 31.50, type: 'custom', images: ['https://placehold.co/600x400/121212/e0e0e0?text=Combo+Coaster'], description: 'A wooden coaster with a built-in metal bottle opener.', specs: {'Material': 'Wood & Metal'} },
+                    { id: 'co-018', name: 'Puzzle Coasters', price: 40.00, type: 'custom', images: ['https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/61_luxscribe_wooden_clock_stencil.jpg'], description: 'A fun set of interlocking puzzle coasters.', specs: {'Material': 'Wood'} },
+                    { id: 'co-019', name: 'Themed Coasters', price: 26.00, type: 'custom', images: ['https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/62_luxscribe_wooden_clock_stencil_geometric_cutouts.jpg'], description: 'Coasters themed around sports, hobbies, or landmarks.', specs: {'Material': 'Varies'} },
+                    { id: 'co-020', name: 'Coaster & Bottle Opener Combo', price: 31.50, type: 'custom', images: ['https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/37_luxscribe_cheers_wooden_bottle_opener.jpg'], description: 'A wooden coaster with a built-in metal bottle opener.', specs: {'Material': 'Wood & Metal'} },
                 ]},
                 'pet-products': { name: 'Pet Products', products: [
                     { id: 'pp-001', name: 'Engraved Stainless Pet ID Tag', price: 16.50, type: 'custom', images: ['https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/38_luxscribe_metal_pet_tag_luna.jpg'], description: 'A durable stainless steel ID tag for your pet.', specs: {'Material': 'Stainless Steel'} },
@@ -213,14 +218,11 @@
                     { id: 'pp-003', name: 'Engraved Stainless Pet Bowl', price: 52.50, type: 'custom', images: ['https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/39_luxscribe_engraved_wooden_pet_bowl.jpg'], description: 'A stainless steel pet bowl with their name on the rim.', specs: {'Material': 'Stainless Steel'} },
                     { id: 'pp-004', name: 'Personalised Dog Leash Tag & ID Tag Combo', price: 34.00, type: 'custom', images: ['https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/41_luxscribe_wooden_pet_tag_buddy.jpg'], description: 'A matching set for your dog\'s leash and collar.', specs: {'Material': 'Varies'} },
                     { id: 'pp-005', name: 'Pet Memorial Plaque/Keepsake Box', price: 65.00, type: 'custom', images: ['https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/42_luxscribe_bone_shaped_pet_tags.jpg'], description: 'A beautiful wooden box to remember your pet.', specs: {'Material': 'Wood'} },
-                    ...Array.from({length: 15}, (_, i) => ({id: `pp-ph-${i}`, name: `Pet Product ${i+6}`, price: 22.99, type: 'pre-made', images: ['https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/Pet%20Jars.webp'], description: 'A quality item for your pet.', specs: {'Material': 'Varies'}}))
                 ]},
                 'wallets': { name: 'Personalized Wallets', products: [
                      { id: 'wa-001', name: 'Laser-Engraved Bifold Leather Wallet', price: 60.00, type: 'custom', images: ['https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/55_luxscribe_leather_wallets_belts_key_fobs.jpg'], description: 'A classic leather wallet with initials or a name.', specs: {'Material': 'Leather'} },
                      { id: 'wa-002', name: 'Slim Front-Pocket Card Holder', price: 35.00, type: 'custom', images: ['https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/56_luxscribe_leather_wallets_and_accessories.jpg'], description: 'A minimalist leather card holder with a monogram.', specs: {'Material': 'Leather'} },
-                     { id: 'wa-003', name: 'RFID-Blocking Leather Card Wallet', price: 62.50, type: 'custom', images: ['https://placehold.co/600x400/121212/e0e0e0?text=RFID+Wallet'], description: 'A secure wallet with an engraved plate.', specs: {'Material': 'Leather & RFID Fabric'} },
                      { id: 'wa-004', name: 'Metal Minimalist Wallet', price: 47.50, type: 'custom', images: ['https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/59_luxscribe_metal_wallet_with_geometric_design.jpg'], description: 'Anodized aluminum wallet with an etched pattern.', specs: {'Material': 'Anodized Aluminum'} },
-                    ...Array.from({length: 16}, (_, i) => ({id: `wa-ph-${i}`, name: `Wallet ${i+5}`, price: 39.99, type: 'pre-made', images: ['https://github.com/TomVercitti/luxcribe-website/blob/main/red-dot-laser-engraving-wallet-personalized-minimalist-wallet-w-monogram-text-or-design-32349871931578_1080x.png.webp?raw=true'], description: 'A stylish and durable wallet.', specs: {'Material': 'Varies'}}))
                 ]},
             };
 
@@ -254,7 +256,7 @@
                             <div id="product-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mt-12">
                                 ${productsToShow.map(p => `
                                     <div class="card cursor-pointer nav-link" data-page="product" data-category="${p.categoryId}" data-product="${p.id}">
-                                        <div class="relative"><img src="${p.images[0]}" alt="${p.name}" class="w-full h-56 object-cover"></div>
+                                        <div class="relative"><img src="${p.images[0]}" alt="${p.name}" class="w-full h-56 object-cover" loading="lazy"></div>
                                         <div class="card-content"><h4 class="font-bold text-lg">${p.name}</h4><p class="text-2xl font-bold mt-2">$${p.price.toFixed(2)}</p></div>
                                     </div>
                                 `).join('')}
@@ -274,13 +276,13 @@
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
                                     <div>
                                         <img id="main-product-image" src="${product.images[0]}" class="w-full rounded-lg shadow-lg">
-                                        <div class="flex space-x-2 mt-4">${product.images.map(img => `<img src="${img}" class="w-20 h-20 object-cover rounded-md cursor-pointer border-2 border-transparent hover:border-indigo-500 gallery-thumb">`).join('')}</div>
+                                        <div class="flex space-x-2 mt-4">${product.images.map(img => `<img src="${img}" class="w-20 h-20 object-cover rounded-md cursor-pointer border-2 border-transparent hover:border-indigo-500 gallery-thumb" loading="lazy">`).join('')}</div>
                                     </div>
                                     <div>
                                         <h2 class="text-4xl font-bold">${product.name}</h2>
                                         <p class="text-3xl text-indigo-400 font-bold my-4">$${product.price.toFixed(2)}</p>
                                         <p class="text-green-400 font-semibold">In Stock - ${product.type === 'pre-made' ? 'Ready to Ship' : 'Made to Order'}</p>
-                                        <div class="mt-6">${product.type === 'custom' ? `<button class="btn btn-primary w-full nav-link" data-page="custom-form" data-product-name="${product.name}">Customize This Product</button>` : `<button class="btn btn-primary w-full add-to-cart-btn" data-product-id="${product.id}" data-category-id="${categoryId}">Add to Cart</button>`}</div>
+                                        <div class="mt-6"><button class="btn btn-primary w-full add-to-cart-btn" data-product-id="${product.id}" data-category-id="${categoryId}">Add to Cart & Customize</button></div>
                                         <div class="mt-8 border-t border-gray-700 pt-6">
                                             <div id="product-tabs" class="flex border-b border-gray-700"><button class="tab-button active" data-tab="description">Description</button><button class="tab-button" data-tab="specs">Specifications</button><button class="tab-button" data-tab="shipping">Shipping</button></div>
                                             <div id="tab-content-description" class="tab-content active mt-4"><p>${product.description}</p></div>
@@ -292,12 +294,6 @@
                             </div>
                         </section>
                         <section id="product-reviews" class="py-20 bg-gray-950"><div class="container"><h3 class="section-title text-4xl md:text-5xl text-center">Top Reviews</h3><div class="review-slider-container max-w-3xl mx-auto mt-8"><div class="review-slider"></div></div><div class="text-center mt-8"><button class="btn btn-primary" id="leave-review-btn">Leave a Review for this Product</button></div></div></section>
-                        <div id="sticky-add-to-cart" class="w-full z-40">
-                            <div class="container flex justify-between items-center">
-                                <div><h4 class="font-bold text-lg">${product.name}</h4><p class="text-xl font-bold text-indigo-400">$${product.price.toFixed(2)}</p></div>
-                                ${product.type === 'custom' ? `<button class="btn btn-primary nav-link" data-page="custom-form" data-product-name="${product.name}">Customize This Product</button>` : `<button class="btn btn-primary add-to-cart-btn" data-product-id="${product.id}" data-category-id="${categoryId}">Add to Cart</button>`}
-                            </div>
-                        </div>
                     </div>`;
             };
 
@@ -391,6 +387,10 @@
                 if(e.target.id === 'leave-review-btn') {
                     showReviewModal();
                 }
+                const mobileMenuButton = e.target.closest('#mobile-menu-button');
+                if(mobileMenuButton) {
+                    document.getElementById('mobile-menu').classList.toggle('hidden');
+                }
             });
             document.body.addEventListener('change', (e) => {
                 if(e.target.id === 'bulk-order-checkbox') {
@@ -417,9 +417,56 @@
                 updateCart();
                 showModal(`${product.name} added to cart!`);
             }
-            function updateCart() { /* ... cart update logic ... */ }
+            function updateCart() {
+                const cartItemsContainer = document.getElementById('cart-items-container');
+                const cartFooter = document.getElementById('cart-footer');
+                const cartBadge = document.getElementById('cart-badge');
+                
+                cartItemsContainer.innerHTML = '';
+                if (cart.length === 0) {
+                    cartItemsContainer.innerHTML = '<p class="text-gray-400 text-center">Your cart is empty.</p>';
+                    cartFooter.innerHTML = '';
+                } else {
+                    cart.forEach((item, index) => {
+                        const cartItemEl = document.createElement('div');
+                        cartItemEl.className = 'flex justify-between items-center bg-[#1a1a1a] p-4 rounded-lg';
+                        cartItemEl.innerHTML = `
+                            <div><h4 class="font-bold text-white">${item.name}</h4><p class="text-indigo-400">$${(item.price * item.quantity).toFixed(2)}</p></div>
+                            <div class="flex items-center gap-4">
+                                <div class="flex items-center gap-2">
+                                    <button class="quantity-change text-lg text-gray-400 hover:text-white" data-index="${index}" data-change="-1">-</button>
+                                    <span class="font-bold">${item.quantity}</span>
+                                    <button class="quantity-change text-lg text-gray-400 hover:text-white" data-index="${index}" data-change="1">+</button>
+                                </div>
+                                <button class="remove-item text-red-500 hover:text-red-400" data-index="${index}">Remove</button>
+                            </div>
+                        `;
+                        cartItemsContainer.appendChild(cartItemEl);
+                    });
+                    const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                    cartFooter.innerHTML = `<div class="text-right"><p class="text-lg">Subtotal: <span class="font-bold text-xl text-indigo-400">$${subtotal.toFixed(2)}</span></p><button id="proceed-to-order-btn" class="btn btn-primary mt-4">Proceed to Order</button></div>`;
+                }
+                const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+                cartBadge.textContent = totalItems;
+                cartBadge.classList.toggle('hidden', totalItems === 0);
+            }
+
             document.getElementById('cart-button').addEventListener('click', () => cartModal.style.display = 'flex');
             cartModal.querySelector('.close-button').addEventListener('click', () => cartModal.style.display = 'none');
+            cartModal.addEventListener('click', e => {
+                 if (e.target.id === 'proceed-to-order-btn') {
+                    let orderSummary = "I would like to order the following items:\n\n";
+                    cart.forEach(item => {
+                        orderSummary += `${item.quantity} x ${item.name}\n`;
+                    });
+                    orderSummary += "\nPlease provide customization details for each 'Custom' item below:\n";
+                    navigateTo('custom-form');
+                    setTimeout(() => {
+                        document.getElementById('order-summary').value = orderSummary;
+                    }, 100);
+                    cartModal.style.display = 'none';
+                }
+            });
             
             // --- REVIEW LOGIC ---
             const reviewModal = document.getElementById('review-modal');
@@ -459,7 +506,6 @@
             function initReviewSlider() {
                 onAuthStateChanged(auth, (user) => {
                     if (user) {
-                        console.log("User is signed in, fetching reviews.");
                         const slider = document.querySelector('.review-slider');
                         if (!slider) return;
                         const reviewsCollectionRef = collection(db, `/artifacts/${appId}/public/data/reviews`);
@@ -480,18 +526,31 @@
                             slider.innerHTML = '<p class="text-red-500 text-center w-full">Could not load reviews.</p>';
                         });
                     } else {
-                        console.log("User is signed out, not fetching reviews.");
+                        signInAnonymously(auth).catch(error => console.error("Anonymous sign-in failed:", error));
                     }
                 });
             }
 
             function showModal(message) {
                 const modal = document.getElementById('confirmation-modal');
-                modal.querySelector('#modal-message').textContent = message;
+                const modalContent = document.getElementById('modal-message-content');
+                modalContent.innerHTML = `<p class="text-lg mt-4">${message}</p><button id="go-to-cart-btn" class="btn btn-primary mt-4">Go to Cart</button>`;
                 modal.style.display = 'flex';
+                document.getElementById('go-to-cart-btn').addEventListener('click', () => {
+                    modal.style.display = 'none';
+                    document.getElementById('cart-button').click();
+                });
             }
             document.getElementById('confirmation-modal').querySelector('.close-button').onclick = () => {
                 document.getElementById('confirmation-modal').style.display = 'none';
+            }
+
+            // Initial auth check
+            const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+            if (initialAuthToken) {
+                signInWithCustomToken(auth, initialAuthToken).catch(err => signInAnonymously(auth));
+            } else {
+                signInAnonymously(auth);
             }
         });
     </script>
