@@ -19,7 +19,7 @@
         .btn-primary { background-color: #6366f1; color: white; }
         .btn-primary:hover { background-color: #4f46e5; transform: translateY(-2px); }
         .btn-secondary { background-color: #333; color: #e0e0e0; border: 1px solid #444; }
-        .btn-secondary:hover { background-color: #444; border-color: #555; }
+        .btn-secondary:hover, .category-btn.active { background-color: #4f46e5; border-color: #4f46e5; }
         .card { background-color: #121212; border-radius: 0.75rem; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); overflow: hidden; transition: transform 0.3s ease, box-shadow 0.3s ease; display: flex; flex-direction: column; }
         .card:hover { transform: translateY(-3px); box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4); }
         .card-content { flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; padding: 1.5rem; }
@@ -40,6 +40,11 @@
         .review-slide { min-width: 100%; box-sizing: border-box; padding: 0 1rem; }
         .star-rating .star { color: #4a4a4a; cursor: pointer; font-size: 2rem; transition: color 0.2s; }
         .star-rating .star.active { color: #F8D134; }
+        .nav-link { position: relative; padding-bottom: 4px; transition: transform 0.3s ease; }
+        .nav-link:hover { transform: translateY(-2px); }
+        .nav-link::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 2px; background-color: white; transform: scaleX(0); transition: transform 0.3s ease; }
+        .nav-link:hover::after { transform: scaleX(1); }
+        .cart-badge { position: absolute; top: -8px; right: -12px; background-color: #ef4444; color: white; border-radius: 50%; padding: 0.1rem 0.4rem; font-size: 0.75rem; font-weight: bold; line-height: 1; }
     </style>
 </head>
 <body>
@@ -53,6 +58,12 @@
                     <li><a href="#" class="font-medium nav-link" data-page="shop">Shop</a></li>
                     <li><a href="#" class="font-medium nav-link" data-page="custom-form">Customize an Order</a></li>
                     <li><a href="#" class="font-medium nav-link" data-page="contact">Contact</a></li>
+                    <li>
+                        <div id="cart-icon" class="relative cursor-pointer">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                            <span id="cart-badge" class="cart-badge hidden">0</span>
+                        </div>
+                    </li>
                 </ul>
             </nav>
             <div class="md:hidden">
@@ -123,7 +134,7 @@
         import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // --- GLOBAL APP STATE ---
-        let db, auth;
+        let db, auth, shopifyUI;
 
         // --- PAGE TEMPLATES ---
         const mainContent = document.getElementById('main-content');
@@ -143,7 +154,16 @@
                 <section class="py-20 bg-black">
                     <div class="container">
                         <h2 class="section-title text-4xl md:text-5xl text-center">All Products</h2>
-                        <div id='collection-component-1755176416758'></div>
+                        <div class="my-8 max-w-lg mx-auto"><input type="search" id="product-search" placeholder="Search for products..." class="form-input"></div>
+                        <div class="flex justify-center flex-wrap gap-4 my-8">
+                            <button class="btn btn-secondary category-btn active" data-collection-id="455555776757">All</button>
+                            <!-- IMPORTANT: Replace YOUR_COLLECTION_ID with the actual ID from your Shopify admin URL -->
+                            <button class="btn btn-secondary category-btn" data-collection-id="YOUR_DRINKWARE_ID">Drinkware & Barware</button>
+                            <button class="btn btn-secondary category-btn" data-collection-id="YOUR_COASTERS_ID">Coasters</button>
+                            <button class="btn btn-secondary category-btn" data-collection-id="YOUR_PET_PRODUCTS_ID">Pet Products</button>
+                            <button class="btn btn-secondary category-btn" data-collection-id="YOUR_WALLETS_ID">Wallets</button>
+                        </div>
+                        <div id='collection-component-container'></div>
                     </div>
                 </section>
             </div>`;
@@ -200,53 +220,56 @@
             mainContent.querySelector('.page').classList.add('active');
 
             if (page === 'home') initReviewSlider();
-            if (page === 'shop') initializeShopifyBuyButton();
-        };
-
-        // --- SHOPIFY INTEGRATION ---
-        function initializeShopifyBuyButton() {
-            var scriptURL = 'https://sdks.shopifycdn.com/buy-button/latest/buy-button-storefront.min.js';
-            if (window.ShopifyBuy && window.ShopifyBuy.UI) {
-                ShopifyBuyInit();
-            } else {
-                var script = document.createElement('script');
-                script.async = true;
-                script.src = scriptURL;
-                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(script);
-                script.onload = ShopifyBuyInit;
-            }
-
-            function ShopifyBuyInit() {
-                var client = ShopifyBuy.buildClient({
-                    domain: 'dbrd1n-q5.myshopify.com',
-                    storefrontAccessToken: 'e8f4d338978c794bf1836c1c4fd7dc56',
-                });
-                ShopifyBuy.UI.onReady(client).then(function (ui) {
-                    ui.createComponent('collection', {
-                        id: '455555776757',
-                        node: document.getElementById('collection-component-1755176416758'),
-                        moneyFormat: '%24%7B%7Bamount%7D%7D',
-                        options: { "product": { "styles": { "product": { "@media (min-width: 601px)": { "max-width": "calc(25% - 20px)", "margin-left": "20px", "margin-bottom": "50px", "width": "calc(25% - 20px)" }, "text-align": "center" }, "title": { "color": "#ffffff" }, "price": { "color": "#e0e0e0" }, "button": { ":hover": { "background-color": "#4e61a4" }, "background-color": "#576cb6", ":focus": { "background-color": "#4e61a4" }, "border-radius": "11px", "padding-left": "66px", "padding-right": "66px" } }, "text": { "button": "Add to cart" } }, "productSet": { "styles": { "products": { "@media (min-width: 601px)": { "margin-left": "-20px" }, "justify-content": "center" } } }, "modalProduct": { "contents": { "img": false, "imgWithCarousel": true, "button": false, "buttonWithQuantity": true }, "styles": { "product": { "@media (min-width: 601px)": { "max-width": "100%", "margin-left": "0px", "margin-bottom": "0px" } }, "button": { ":hover": { "background-color": "#4e61a4" }, "background-color": "#576cb6", ":focus": { "background-color": "#4e61a4" }, "border-radius": "11px", "padding-left": "66px", "padding-right": "66px" } }, "text": { "button": "Add to cart" } }, "option": {}, "cart": { "styles": { "button": { ":hover": { "background-color": "#4e61a4" }, "background-color": "#576cb6", ":focus": { "background-color": "#4e61a4" }, "border-radius": "11px" } }, "text": { "total": "Subtotal", "button": "Checkout" } }, "toggle": { "styles": { "toggle": { "display": "none" } } } },
+            if (page === 'shop') {
+                initializeShopifyCollection("455555776757"); // Default to "All" collection
+                document.querySelectorAll('.category-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                        e.target.classList.add('active');
+                        const collectionId = e.target.dataset.collectionId;
+                        initializeShopifyCollection(collectionId);
                     });
                 });
             }
+        };
+
+        // --- SHOPIFY INTEGRATION ---
+        function initializeShopifyCollection(collectionId) {
+            if (!shopifyUI) return;
+            const container = document.getElementById('collection-component-container');
+            container.innerHTML = ''; // Clear previous collection
+            const newId = `collection-component-${Date.now()}`;
+            container.innerHTML = `<div id="${newId}"></div>`;
+
+            shopifyUI.createComponent('collection', {
+                id: collectionId,
+                node: document.getElementById(newId),
+                moneyFormat: '%24%7B%7Bamount%7D%7D',
+                options: { "product": { "styles": { "product": { "@media (min-width: 601px)": { "max-width": "calc(25% - 20px)", "margin-left": "20px", "margin-bottom": "50px", "width": "calc(25% - 20px)" }, "text-align": "center" }, "title": { "color": "#ffffff" }, "price": { "color": "#e0e0e0" }, "button": { ":hover": { "background-color": "#4e61a4" }, "background-color": "#576cb6", ":focus": { "background-color": "#4e61a4" }, "border-radius": "11px", "padding-left": "66px", "padding-right": "66px" } }, "text": { "button": "Add to cart" } }, "productSet": { "styles": { "products": { "@media (min-width: 601px)": { "margin-left": "-20px" }, "justify-content": "center" } } }, "modalProduct": { "contents": { "img": false, "imgWithCarousel": true, "button": false, "buttonWithQuantity": true }, "styles": { "product": { "@media (min-width: 601px)": { "max-width": "100%", "margin-left": "0px", "margin-bottom": "0px" } }, "button": { ":hover": { "background-color": "#4e61a4" }, "background-color": "#576cb6", ":focus": { "background-color": "#4e61a4" }, "border-radius": "11px", "padding-left": "66px", "padding-right": "66px" } }, "text": { "button": "Add to cart" } }, "option": {}, "cart": { "styles": { "button": { ":hover": { "background-color": "#4e61a4" }, "background-color": "#576cb6", ":focus": { "background-color": "#4e61a4" }, "border-radius": "11px" } }, "text": { "total": "Subtotal", "button": "Checkout" }, "events": { afterRender: (cart) => { const cartBadge = document.getElementById('cart-badge'); if (cart) { const count = cart.lineItems.reduce((acc, item) => acc + item.quantity, 0); cartBadge.textContent = count; cartBadge.classList.toggle('hidden', count === 0); } } } }, "toggle": { "styles": { "toggle": { "display": "none" } } } },
+            });
         }
 
         // --- EVENT LISTENERS ---
-        document.body.addEventListener('click', (e) => {
-            const navLink = e.target.closest('.nav-link');
-            if (navLink) {
-                e.preventDefault();
-                navigateTo(navLink.dataset.page);
-            }
-            if(e.target.id === 'leave-review-btn') {
-                showReviewModal();
-            }
-            const mobileMenuButton = e.target.closest('#mobile-menu-button');
-            if(mobileMenuButton) {
-                document.getElementById('mobile-menu').classList.toggle('hidden');
-            }
-        });
+        function setupEventListeners() {
+            document.body.addEventListener('click', (e) => {
+                const navLink = e.target.closest('.nav-link');
+                if (navLink) {
+                    e.preventDefault();
+                    navigateTo(navLink.dataset.page);
+                }
+                if(e.target.id === 'leave-review-btn') {
+                    showReviewModal();
+                }
+                const mobileMenuButton = e.target.closest('#mobile-menu-button');
+                if(mobileMenuButton) {
+                    document.getElementById('mobile-menu').classList.toggle('hidden');
+                }
+                const cartIcon = e.target.closest('#cart-icon');
+                if (cartIcon && shopifyUI && shopifyUI.components.cart[0]) {
+                    shopifyUI.components.cart[0].toggle.setVisible(true);
+                }
+            });
+        }
 
         // --- REVIEW LOGIC ---
         function initReviewSlider() { /* ... review logic ... */ }
@@ -254,7 +277,6 @@
 
         // --- INITIALIZE APP ---
         function init() {
-            // --- IMPORTANT: PASTE YOUR FIREBASE CONFIG HERE ---
             const userFirebaseConfig = {
                 apiKey: "AIzaSyC4oVD1XhXjng2yx6kgHBt_XgZY8TpcxS8",
                 authDomain: "luxcribe.firebaseapp.com",
@@ -273,22 +295,28 @@
                 const app = initializeApp(finalFirebaseConfig);
                 db = getFirestore(app);
                 auth = getAuth(app);
+                signInAnonymously(auth).catch(console.error);
+            } catch (e) {
+                console.error("Could not initialize Firebase.", e);
+            }
 
-                const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-                const authPromise = initialAuthToken ? signInWithCustomToken(auth, initialAuthToken) : signInAnonymously(auth);
-
-                authPromise.catch(error => {
-                    console.error("Firebase authentication failed:", error);
-                }).finally(() => {
+            var scriptURL = 'https://sdks.shopifycdn.com/buy-button/latest/buy-button-storefront.min.js';
+            var script = document.createElement('script');
+            script.async = true;
+            script.src = scriptURL;
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(script);
+            script.onload = () => {
+                var client = ShopifyBuy.buildClient({
+                    domain: 'dbrd1n-q5.myshopify.com',
+                    storefrontAccessToken: 'e8f4d338978c794bf1836c1c4fd7dc56',
+                });
+                ShopifyBuy.UI.onReady(client).then(function (ui) {
+                    shopifyUI = ui;
+                    setupEventListeners();
                     navigateTo('home');
                     document.getElementById('footer-copyright').innerHTML = `&copy; ${new Date().getFullYear()} Luxcribe. All Rights Reserved.`;
                 });
-            } catch (e) {
-                console.error("Could not initialize Firebase. Please check your config.", e);
-                // If firebase fails, still try to load the page without review functionality.
-                navigateTo('home');
-                document.getElementById('footer-copyright').innerHTML = `&copy; ${new Date().getFullYear()} Luxcribe. All Rights Reserved.`;
-            }
+            };
         }
 
         init();
