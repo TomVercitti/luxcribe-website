@@ -40,7 +40,6 @@
         .review-slide { min-width: 100%; box-sizing: border-box; padding: 0 1rem; }
         .star-rating .star { color: #4a4a4a; cursor: pointer; font-size: 2rem; transition: color 0.2s; }
         .star-rating .star.active { color: #F8D134; }
-        .cart-badge { position: absolute; top: -8px; right: -12px; background-color: #ef4444; color: white; border-radius: 50%; padding: 0.1rem 0.4rem; font-size: 0.75rem; font-weight: bold; line-height: 1; }
     </style>
 </head>
 <body>
@@ -54,12 +53,6 @@
                     <li><a href="#" class="font-medium nav-link" data-page="shop">Shop</a></li>
                     <li><a href="#" class="font-medium nav-link" data-page="custom-form">Customize an Order</a></li>
                     <li><a href="#" class="font-medium nav-link" data-page="contact">Contact</a></li>
-                    <li>
-                        <div id="shopify-cart-icon" class="relative cursor-pointer">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
-                            <span id="cart-badge" class="cart-badge hidden">0</span>
-                        </div>
-                    </li>
                 </ul>
             </nav>
             <div class="md:hidden">
@@ -283,22 +276,6 @@
                             },
                           });
 
-                          // --- Custom Cart Logic ---
-                          const cartIcon = document.getElementById('shopify-cart-icon');
-                          const cartBadge = document.getElementById('cart-badge');
-
-                          function updateCartCount() {
-                            const count = ui.cart.lineItemCount;
-                            cartBadge.textContent = count;
-                            cartBadge.classList.toggle('hidden', count === 0);
-                          }
-
-                          cartIcon.addEventListener('click', () => {
-                            ui.cart.open();
-                          });
-
-                          ui.cart.on('update', updateCartCount);
-                          updateCartCount(); // Initial count
                         });
                       }
                     })();
