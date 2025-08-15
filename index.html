@@ -130,265 +130,165 @@
         const db = getFirestore(app);
         const auth = getAuth(app);
 
-        document.addEventListener('DOMContentLoaded', () => {
+        // --- GLOBAL VARIABLES ---
+        const mainContent = document.getElementById('main-content');
             
-            // --- RENDER FUNCTIONS ---
-            const mainContent = document.getElementById('main-content');
-            
-            const renderHomePage = () => `
-                <div id="home-page" class="page">
-                    <section class="hero-video-container">
-                        <video autoplay loop muted playsinline class="hero-video" poster="https://placehold.co/1920x1080/0a0a0a/333333?text=Luxcribe+Engraving"><source src="https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/62_Laser_Engraving_Timelapse_Video.mp4" type="video/mp4"></video>
-                        <div class="video-overlay"></div><div class="hero-content"><h2 class="text-5xl md:text-6xl font-extrabold mb-4">Your Vision,<br>Laser Crafted.</h2><p class="text-xl md:text-2xl mb-8">Personalized gifts, unique decor, and custom creations.</p></div>
-                    </section>
-                    <section class="py-20 bg-black"><div class="container"><h3 class="section-title text-4xl md:text-5xl text-center">Shop Our Collections</h3><p class="section-subtitle text-center text-gray-400">Find the perfect item, whether you need a ready-to-ship gift or a fully personalized creation.</p><div class="grid grid-cols-1 md:grid-cols-2 gap-8"><div class="card p-8 text-center bg-gray-900"><h4 class="text-3xl font-bold mb-4">Our Products</h4><p class="text-gray-400 mb-6 flex-grow">Browse our curated collection of ready-to-ship designs, perfect for last-minute gifts.</p><button class="btn btn-primary nav-link" data-page="shop">View All Products</button></div><div class="card p-8 text-center bg-gray-900"><h4 class="text-3xl font-bold mb-4">Customize Your Product</h4><p class="text-gray-400 mb-6 flex-grow">Have a unique idea? Start from scratch and create a one-of-a-kind item with our help.</p><button class="btn btn-primary nav-link" data-page="custom-form">Start Your Custom Order</button></div></div></div></section>
-                    <section id="reviews" class="py-20 bg-gray-950"><div class="container"><h3 class="section-title text-4xl md:text-5xl text-center">What Our Customers Say</h3><div class="review-slider-container max-w-3xl mx-auto mt-8"><div class="review-slider"></div></div><div class="text-center mt-8"><button class="btn btn-primary" id="leave-review-btn">Leave a Review</button></div></div></section>
-                </div>`;
+        // --- PAGE TEMPLATES ---
+        const renderHomePage = () => `
+            <div id="home-page" class="page">
+                <section class="hero-video-container">
+                    <video autoplay loop muted playsinline class="hero-video" poster="https://placehold.co/1920x1080/0a0a0a/333333?text=Luxcribe+Engraving"><source src="https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/62_Laser_Engraving_Timelapse_Video.mp4" type="video/mp4"></video>
+                    <div class="video-overlay"></div><div class="hero-content"><h2 class="text-5xl md:text-6xl font-extrabold mb-4">Your Vision,<br>Laser Crafted.</h2><p class="text-xl md:text-2xl mb-8">Personalized gifts, unique decor, and custom creations.</p></div>
+                </section>
+                <section class="py-20 bg-black"><div class="container"><h3 class="section-title text-4xl md:text-5xl text-center">Shop Our Collections</h3><p class="section-subtitle text-center text-gray-400">Find the perfect item, whether you need a ready-to-ship gift or a fully personalized creation.</p><div class="grid grid-cols-1 md:grid-cols-2 gap-8"><div class="card p-8 text-center bg-gray-900"><h4 class="text-3xl font-bold mb-4">Our Products</h4><p class="text-gray-400 mb-6 flex-grow">Browse our curated collection of ready-to-ship designs, perfect for last-minute gifts.</p><button class="btn btn-primary nav-link" data-page="shop">View All Products</button></div><div class="card p-8 text-center bg-gray-900"><h4 class="text-3xl font-bold mb-4">Customize Your Product</h4><p class="text-gray-400 mb-6 flex-grow">Have a unique idea? Start from scratch and create a one-of-a-kind item with our help.</p><button class="btn btn-primary nav-link" data-page="custom-form">Start Your Custom Order</button></div></div></div></section>
+                <section id="reviews" class="py-20 bg-gray-950"><div class="container"><h3 class="section-title text-4xl md:text-5xl text-center">What Our Customers Say</h3><div class="review-slider-container max-w-3xl mx-auto mt-8"><div class="review-slider"></div></div><div class="text-center mt-8"><button class="btn btn-primary" id="leave-review-btn">Leave a Review</button></div></div></section>
+            </div>`;
 
-            const renderShopPage = () => `
-                <div id="shop-page" class="page">
-                    <section class="py-20 bg-black">
-                        <div class="container">
-                            <h2 class="section-title text-4xl md:text-5xl text-center">All Products</h2>
-                            <div id='collection-component-1755176416758'></div>
-                        </div>
-                    </section>
-                </div>`;
+        const renderShopPage = () => `
+            <div id="shop-page" class="page">
+                <section class="py-20 bg-black">
+                    <div class="container">
+                        <h2 class="section-title text-4xl md:text-5xl text-center">All Products</h2>
+                        <div id='collection-component-1755176416758'></div>
+                    </div>
+                </section>
+            </div>`;
 
-            const renderCustomFormPage = () => `
-                <div id="custom-form-page" class="page">
-                    <section id="how-to-order" class="py-20 bg-gray-950">
-                        <div class="container max-w-2xl mx-auto">
-                            <h3 class="section-title text-4xl md:text-5xl text-center">Customize Your Order</h3>
-                            <p class="section-subtitle text-center text-gray-400">Fill out the details below. We'll email you a design proof and payment instructions.</p>
-                            <form id="custom-order-form" class="space-y-6 bg-[#121212] p-8 rounded-lg">
-                                <div><label class="block mb-2">Full Name *</label><input type="text" name="name" required class="form-input"></div>
-                                <div><label class="block mb-2">Email *</label><input type="email" name="email" required class="form-input"></div>
-                                <div><label class="block mb-2">Customization Details *</label><textarea name="details" id="order-summary" rows="6" required class="form-input" placeholder="Describe your design, text, fonts, and placement."></textarea></div>
-                                <div><label class="block mb-2">Upload Your Design (if applicable)</label><input type="file" name="file" class="form-input"></div>
-                                <div class="pt-4"><label class="flex items-center"><input type="checkbox" id="bulk-order-checkbox" name="is-bulk" class="h-5 w-5 mr-3"><span class="text-lg">Is this a bulk or corporate order?</span></label><div id="bulk-order-fields" class="hidden space-y-4 mt-4 pl-8"><div><label class="block mb-2">Company Name</label><input type="text" name="company" class="form-input"></div><div><label class="block mb-2">Estimated Quantity</label><input type="number" name="quantity" class="form-input"></div></div></div>
-                                <button type="submit" class="btn btn-primary w-full !mt-8">Submit Customization Request</button>
-                            </form>
+        const renderCustomFormPage = () => `
+            <div id="custom-form-page" class="page">
+                <section id="how-to-order" class="py-20 bg-gray-950">
+                    <div class="container max-w-2xl mx-auto">
+                        <h3 class="section-title text-4xl md:text-5xl text-center">Customize Your Order</h3>
+                        <p class="section-subtitle text-center text-gray-400">Fill out the details below. We'll email you a design proof and payment instructions.</p>
+                        <form id="custom-order-form" class="space-y-6 bg-[#121212] p-8 rounded-lg">
+                            <div><label class="block mb-2">Full Name *</label><input type="text" name="name" required class="form-input"></div>
+                            <div><label class="block mb-2">Email *</label><input type="email" name="email" required class="form-input"></div>
+                            <div><label class="block mb-2">Customization Details *</label><textarea name="details" id="order-summary" rows="6" required class="form-input" placeholder="Describe your design, text, fonts, and placement."></textarea></div>
+                            <div><label class="block mb-2">Upload Your Design (if applicable)</label><input type="file" name="file" class="form-input"></div>
+                            <div class="pt-4"><label class="flex items-center"><input type="checkbox" id="bulk-order-checkbox" name="is-bulk" class="h-5 w-5 mr-3"><span class="text-lg">Is this a bulk or corporate order?</span></label><div id="bulk-order-fields" class="hidden space-y-4 mt-4 pl-8"><div><label class="block mb-2">Company Name</label><input type="text" name="company" class="form-input"></div><div><label class="block mb-2">Estimated Quantity</label><input type="number" name="quantity" class="form-input"></div></div></div>
+                            <button type="submit" class="btn btn-primary w-full !mt-8">Submit Customization Request</button>
+                        </form>
+                    </div>
+                </section>
+            </div>`;
+        
+        const renderContactPage = () => `
+            <div id="contact-page" class="page">
+                <section id="contact" class="py-20 bg-black text-center">
+                    <div class="container">
+                        <h3 class="section-title text-4xl md:text-5xl">Get In Touch</h3>
+                        <p class="section-subtitle">Have a question or a custom project in mind? We'd love to hear from you!</p>
+                        <div class="flex justify-center space-x-4">
+                            <a href="mailto:swapnil.poudyal008@gmail.com" class="btn btn-primary flex items-center space-x-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" /><path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" /></svg>
+                                <span>Email Us</span>
+                            </a>
+                            <a href="tel:0426799080" class="btn btn-secondary flex items-center space-x-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" /></svg>
+                                <span>Call Us</span>
+                            </a>
                         </div>
-                    </section>
-                </div>`;
-            
-            const renderContactPage = () => `
-                <div id="contact-page" class="page">
-                    <section id="contact" class="py-20 bg-black text-center">
-                        <div class="container">
-                            <h3 class="section-title text-4xl md:text-5xl">Get In Touch</h3>
-                            <p class="section-subtitle">Have a question or a custom project in mind? We'd love to hear from you!</p>
-                            <div class="flex justify-center space-x-4">
-                                <a href="mailto:swapnil.poudyal008@gmail.com" class="btn btn-primary flex items-center space-x-2">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" /><path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" /></svg>
-                                    <span>Email Us</span>
-                                </a>
-                                <a href="tel:0426799080" class="btn btn-secondary flex items-center space-x-2">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" /></svg>
-                                    <span>Call Us</span>
-                                </a>
-                            </div>
-                            <p class="text-gray-400 mt-8">ABN: 92 274 540 850</p>
-                        </div>
-                    </section>
-                </div>
-            `;
-            
-            // --- ROUTING & PAGE DISPLAY ---
-            const navigateTo = (page, options = {}) => {
-                window.scrollTo(0, 0);
-                let content = '';
-                if (page === 'home') content = renderHomePage();
-                else if (page === 'shop') content = renderShopPage();
-                else if (page === 'custom-form') content = renderCustomFormPage();
-                else if (page === 'contact') content = renderContactPage();
-                mainContent.innerHTML = content;
-                mainContent.querySelector('.page').classList.add('active');
+                        <p class="text-gray-400 mt-8">ABN: 92 274 540 850</p>
+                    </div>
+                </section>
+            </div>
+        `;
+        
+        // --- ROUTING & PAGE DISPLAY ---
+        const navigateTo = (page) => {
+            window.scrollTo(0, 0);
+            let content = '';
+            if (page === 'home') content = renderHomePage();
+            else if (page === 'shop') content = renderShopPage();
+            else if (page === 'custom-form') content = renderCustomFormPage();
+            else if (page === 'contact') content = renderContactPage();
+            mainContent.innerHTML = content;
+            mainContent.querySelector('.page').classList.add('active');
 
-                if (page === 'home') {
-                    initReviewSlider();
-                }
-                
-                if (page === 'shop') {
-                    (function () {
-                      var scriptURL = 'https://sdks.shopifycdn.com/buy-button/latest/buy-button-storefront.min.js';
-                      if (window.ShopifyBuy) {
-                        if (window.ShopifyBuy.UI) {
-                          ShopifyBuyInit();
-                        } else {
-                          loadScript();
-                        }
-                      } else {
-                        loadScript();
-                      }
-                      function loadScript() {
-                        var script = document.createElement('script');
-                        script.async = true;
-                        script.src = scriptURL;
-                        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(script);
-                        script.onload = ShopifyBuyInit;
-                      }
-                      function ShopifyBuyInit() {
-                        var client = ShopifyBuy.buildClient({
-                          domain: 'dbrd1n-q5.myshopify.com',
-                          storefrontAccessToken: 'e8f4d338978c794bf1836c1c4fd7dc56',
-                        });
-                        ShopifyBuy.UI.onReady(client).then(function (ui) {
-                          ui.createComponent('collection', {
-                            id: '455555776757',
-                            node: document.getElementById('collection-component-1755176416758'),
-                            moneyFormat: '%24%7B%7Bamount%7D%7D',
-                            options: {
-                              "product": {
+            if (page === 'home') {
+                initReviewSlider();
+            }
+            
+            if (page === 'shop') {
+                initializeShopifyBuyButton();
+            }
+        };
+
+        // --- SHOPIFY INTEGRATION ---
+        function initializeShopifyBuyButton() {
+            var scriptURL = 'https://sdks.shopifycdn.com/buy-button/latest/buy-button-storefront.min.js';
+            if (window.ShopifyBuy && window.ShopifyBuy.UI) {
+                ShopifyBuyInit();
+            } else {
+                var script = document.createElement('script');
+                script.async = true;
+                script.src = scriptURL;
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(script);
+                script.onload = ShopifyBuyInit;
+            }
+
+            function ShopifyBuyInit() {
+                var client = ShopifyBuy.buildClient({
+                    domain: 'dbrd1n-q5.myshopify.com',
+                    storefrontAccessToken: 'e8f4d338978c794bf1836c1c4fd7dc56',
+                });
+                ShopifyBuy.UI.onReady(client).then(function (ui) {
+                    ui.createComponent('collection', {
+                        id: '455555776757',
+                        node: document.getElementById('collection-component-1755176416758'),
+                        moneyFormat: '%24%7B%7Bamount%7D%7D',
+                        options: {
+                            "product": {
                                 "styles": {
-                                  "product": {
-                                    "@media (min-width: 601px)": {
-                                      "max-width": "calc(25% - 20px)",
-                                      "margin-left": "20px",
-                                      "margin-bottom": "50px",
-                                      "width": "calc(25% - 20px)"
-                                    },
-                                    "text-align": "center"
-                                  },
-                                   "title": {
-                                    "color": "#ffffff"
-                                  },
-                                  "price": {
-                                    "color": "#e0e0e0"
-                                  },
-                                  "button": {
-                                    ":hover": { "background-color": "#4e61a4" },
-                                    "background-color": "#576cb6",
-                                    ":focus": { "background-color": "#4e61a4" },
-                                    "border-radius": "11px",
-                                    "padding-left": "66px",
-                                    "padding-right": "66px"
-                                  }
+                                    "product": { "@media (min-width: 601px)": { "max-width": "calc(25% - 20px)", "margin-left": "20px", "margin-bottom": "50px", "width": "calc(25% - 20px)" }, "text-align": "center" },
+                                    "title": { "color": "#ffffff" },
+                                    "price": { "color": "#e0e0e0" },
+                                    "button": { ":hover": { "background-color": "#4e61a4" }, "background-color": "#576cb6", ":focus": { "background-color": "#4e61a4" }, "border-radius": "11px", "padding-left": "66px", "padding-right": "66px" }
                                 },
                                 "text": { "button": "Add to cart" }
-                              },
-                              "productSet": { "styles": { "products": { "@media (min-width: 601px)": { "margin-left": "-20px" }, "justify-content": "center" } } },
-                              "modalProduct": { "contents": { "img": false, "imgWithCarousel": true, "button": false, "buttonWithQuantity": true }, "styles": { "product": { "@media (min-width: 601px)": { "max-width": "100%", "margin-left": "0px", "margin-bottom": "0px" } }, "button": { ":hover": { "background-color": "#4e61a4" }, "background-color": "#576cb6", ":focus": { "background-color": "#4e61a4" }, "border-radius": "11px", "padding-left": "66px", "padding-right": "66px" } }, "text": { "button": "Add to cart" } },
-                              "option": {},
-                              "cart": { "styles": { "button": { ":hover": { "background-color": "#4e61a4" }, "background-color": "#576cb6", ":focus": { "background-color": "#4e61a4" }, "border-radius": "11px" } }, "text": { "total": "Subtotal", "button": "Checkout" } },
-                              "toggle": { "styles": { "toggle": { "display": "none" } } }
                             },
-                          });
-
-                        });
-                      }
-                    })();
-                }
-            };
-
-            // --- INITIALIZATION ---
-            navigateTo('home');
-            document.getElementById('footer-copyright').innerHTML = `&copy; ${new Date().getFullYear()} Luxcribe. All Rights Reserved.`;
-
-
-            // --- EVENT LISTENERS ---
-            document.body.addEventListener('click', (e) => {
-                const navLink = e.target.closest('.nav-link');
-                if (navLink) {
-                    e.preventDefault();
-                    navigateTo(navLink.dataset.page, navLink.dataset);
-                }
-                if(e.target.id === 'leave-review-btn') {
-                    showReviewModal();
-                }
-                const mobileMenuButton = e.target.closest('#mobile-menu-button');
-                if(mobileMenuButton) {
-                    document.getElementById('mobile-menu').classList.toggle('hidden');
-                }
-            });
-            document.body.addEventListener('change', (e) => {
-                if(e.target.id === 'bulk-order-checkbox') {
-                    document.getElementById('bulk-order-fields').classList.toggle('hidden', !e.target.checked);
-                }
-            });
-            
-            // --- REVIEW LOGIC ---
-            const reviewModal = document.getElementById('review-modal');
-            const reviewFormContainer = document.getElementById('review-form-container');
-
-            function showReviewModal() {
-                reviewFormContainer.innerHTML = `
-                    <h3 class="text-2xl font-bold text-white mb-4">Leave a Review</h3>
-                    <form id="review-form" class="space-y-6 text-left">
-                        <div><label for="review-name" class="block text-sm font-medium text-gray-400">Your Name *</label><input type="text" name="review-name" id="review-name" required class="mt-1 block w-full form-input"></div>
-                        <div><label for="review-text" class="block text-sm font-medium text-gray-400">Your Review *</label><textarea name="review-text" id="review-text" rows="4" required class="mt-1 block w-full form-input"></textarea></div>
-                        <div><label class="block text-sm font-medium text-gray-400 mb-2">Rating *</label><div class="star-rating flex justify-start gap-1">${[1,2,3,4,5].map(i => `<span class="star" data-value="${i}">&#9733;</span>`).join('')}</div><input type="hidden" name="rating" id="rating-input" required></div>
-                        <button type="submit" class="btn btn-primary w-full">Submit Review</button>
-                    </form>
-                `;
-                reviewModal.style.display = 'flex';
-                
-                const stars = reviewFormContainer.querySelectorAll('.star-rating .star');
-                let currentRating = 0;
-                stars.forEach(star => {
-                    star.addEventListener('click', () => {
-                        currentRating = star.dataset.value;
-                        reviewFormContainer.querySelector('#rating-input').value = currentRating;
-                        updateStarDisplay(stars, currentRating);
+                            "productSet": { "styles": { "products": { "@media (min-width: 601px)": { "margin-left": "-20px" }, "justify-content": "center" } } },
+                            "modalProduct": { "contents": { "img": false, "imgWithCarousel": true, "button": false, "buttonWithQuantity": true }, "styles": { "product": { "@media (min-width: 601px)": { "max-width": "100%", "margin-left": "0px", "margin-bottom": "0px" } }, "button": { ":hover": { "background-color": "#4e61a4" }, "background-color": "#576cb6", ":focus": { "background-color": "#4e61a4" }, "border-radius": "11px", "padding-left": "66px", "padding-right": "66px" } }, "text": { "button": "Add to cart" } },
+                            "option": {},
+                            "cart": { "styles": { "button": { ":hover": { "background-color": "#4e61a4" }, "background-color": "#576cb6", ":focus": { "background-color": "#4e61a4" }, "border-radius": "11px" } }, "text": { "total": "Subtotal", "button": "Checkout" } },
+                            "toggle": { "styles": { "toggle": { "display": "none" } } }
+                        },
                     });
                 });
             }
-            
-            function updateStarDisplay(stars, rating) {
-                stars.forEach(s => {
-                    s.classList.toggle('active', s.dataset.value <= rating);
-                });
+        }
+
+        // --- EVENT LISTENERS ---
+        document.body.addEventListener('click', (e) => {
+            const navLink = e.target.closest('.nav-link');
+            if (navLink) {
+                e.preventDefault();
+                navigateTo(navLink.dataset.page);
             }
-
-            reviewModal.querySelector('.close-button').addEventListener('click', () => reviewModal.style.display = 'none');
-            
-            function initReviewSlider() {
-                if (!auth.currentUser) return;
-                const slider = document.querySelector('.review-slider');
-                if (!slider) return;
-                const reviewsCollectionRef = collection(db, `/artifacts/${appId}/public/data/reviews`);
-                const q = query(reviewsCollectionRef, orderBy('timestamp', 'desc'));
-                
-                onSnapshot(q, (snapshot) => {
-                    if (snapshot.empty) {
-                        slider.innerHTML = '<p class="text-gray-500 text-center w-full">No reviews yet. Be the first!</p>';
-                        return;
-                    }
-                    slider.innerHTML = snapshot.docs.map(doc => {
-                        const review = doc.data();
-                        const stars = '<span class="text-yellow-400">' + '&#9733;'.repeat(review.rating) + '</span>' + '<span class="text-gray-600">' + '&#9733;'.repeat(5 - review.rating) + '</span>';
-                        return `<div class="review-slide"><div class="card p-6"><div class="text-2xl">${stars}</div><p class="text-gray-300 mt-4">"${review.review}"</p><h5 class="text-lg font-bold text-white mt-4">- ${review.name}</h5></div></div>`;
-                    }).join('');
-                }, (error) => {
-                    console.error("Error fetching reviews:", error);
-                    slider.innerHTML = '<p class="text-red-500 text-center w-full">Could not load reviews.</p>';
-                });
+            if(e.target.id === 'leave-review-btn') {
+                showReviewModal();
             }
-
-            // --- AUTHENTICATION ---
-            const authenticateUser = async () => {
-                try {
-                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                        await signInWithCustomToken(auth, __initial_auth_token);
-                    } else {
-                        await signInAnonymously(auth);
-                    }
-                } catch (error) {
-                    console.error("Authentication failed:", error);
-                }
-            };
-
-            onAuthStateChanged(auth, (user) => {
-                if (user) {
-                    if (document.querySelector('.review-slider')) {
-                         initReviewSlider();
-                    }
-                }
-            });
-
-            authenticateUser();
+            const mobileMenuButton = e.target.closest('#mobile-menu-button');
+            if(mobileMenuButton) {
+                document.getElementById('mobile-menu').classList.toggle('hidden');
+            }
         });
+
+        // --- REVIEW LOGIC ---
+        function initReviewSlider() {
+            // Review slider logic will go here
+        }
+        function showReviewModal() {
+            // Show review modal logic will go here
+        }
+
+        // --- INITIALIZE APP ---
+        function init() {
+            navigateTo('home');
+            document.getElementById('footer-copyright').innerHTML = `&copy; ${new Date().getFullYear()} Luxcribe. All Rights Reserved.`;
+        }
+
+        init();
     </script>
 </body>
 </html>
