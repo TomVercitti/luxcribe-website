@@ -8,7 +8,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts: Lato for a clean, modern look and Playfair Display for titles -->
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
-    <!-- NOTE: Firebase SDKs are now loaded in a single script block at the end of the body -->
     <style>
         html { scroll-behavior: smooth; }
         body { font-family: 'Lato', sans-serif; background-color: #0a0a0a; color: #e0e0e0; line-height: 1.6; overflow-x: hidden; }
@@ -33,27 +32,14 @@
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); justify-content: center; align-items: center; }
         .modal-content { background-color: #121212; margin: auto; padding: 2rem; border: 1px solid #888; width: 90%; max-width: 500px; border-radius: 0.75rem; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); }
         .close-button { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
-        .cart-badge { position: absolute; top: -8px; right: -12px; background-color: #ef4444; color: white; border-radius: 50%; padding: 0.1rem 0.4rem; font-size: 0.75rem; font-weight: bold; line-height: 1; }
-        #cart-modal .modal-content { max-width: 600px; text-align: left; }
-        #cart-items-container { max-height: 60vh; overflow-y: auto; }
         .page { display: none; animation: fadeIn 0.5s; }
         .page.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .tab-button { padding: 0.75rem 1.5rem; border-bottom: 2px solid transparent; transition: all 0.3s; }
-        .tab-button.active { border-bottom-color: #6366f1; color: #6366f1; }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
         .review-slider-container { overflow: hidden; position: relative; }
         .review-slider { display: flex; transition: transform 0.5s ease-in-out; }
         .review-slide { min-width: 100%; box-sizing: border-box; padding: 0 1rem; }
         .star-rating .star { color: #4a4a4a; cursor: pointer; font-size: 2rem; transition: color 0.2s; }
         .star-rating .star.active { color: #F8D134; }
-        .dropdown { position: relative; display: inline-block; }
-        .dropdown-content { display: none; position: absolute; background-color: #1a1a1a; min-width: 260px; box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); z-index: 100; border-radius: 0.5rem; }
-        .dropdown-content a { color: #e0e0e0; padding: 12px 16px; text-decoration: none; display: block; }
-        .dropdown-content a:hover { background-color: #333; }
-        .dropdown:hover .dropdown-content { display: block; }
-        .dropdown > a:hover { text-decoration: underline; text-decoration-color: white; }
     </style>
 </head>
 <body>
@@ -64,20 +50,9 @@
             <nav class="hidden md:flex">
                 <ul class="flex space-x-6 items-center">
                     <li><a href="#" class="font-medium nav-link" data-page="home">Home</a></li>
-                    <li class="dropdown">
-                        <a href="#" class="font-medium nav-link" data-page="shop">Shop</a>
-                        <div id="shop-dropdown" class="dropdown-content">
-                            <!-- Dropdown links will be injected here -->
-                        </div>
-                    </li>
+                    <li><a href="#" class="font-medium nav-link" data-page="shop">Shop</a></li>
                     <li><a href="#" class="font-medium nav-link" data-page="custom-form">Customize an Order</a></li>
                     <li><a href="#" class="font-medium nav-link" data-page="contact">Contact</a></li>
-                    <li>
-                        <div id="cart-button" class="relative cursor-pointer">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
-                            <span id="cart-badge" class="cart-badge hidden">0</span>
-                        </div>
-                    </li>
                 </ul>
             </nav>
             <div class="md:hidden">
@@ -103,9 +78,9 @@
         <div class="container py-12">
             <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
                 <div>
-                    <h4 class="font-bold text-lg mb-4">Shop by Category</h4>
-                    <ul class="space-y-2 text-gray-400" id="footer-links-shop">
-                        <!-- Shop links injected here -->
+                    <h4 class="font-bold text-lg mb-4">Shop</h4>
+                    <ul class="space-y-2 text-gray-400">
+                         <li><a href="#" class="hover:text-white nav-link" data-page="shop">All Products</a></li>
                     </ul>
                 </div>
                 <div>
@@ -140,8 +115,6 @@
     </footer>
 
     <!-- Modals -->
-    <div id="confirmation-modal" class="modal"><div class="modal-content relative"><span class="close-button absolute top-4 right-6">&times;</span><div id="modal-message-content"></div></div></div>
-    <div id="cart-modal" class="modal"><div class="modal-content relative"><div class="flex justify-between items-center mb-6"><h3 class="text-2xl font-bold text-white">Your Shopping Cart</h3><span class="close-button absolute top-4 right-6">&times;</span></div><div id="cart-items-container" class="space-y-4"></div><div id="cart-footer" class="mt-6 pt-4 border-t border-gray-700"></div></div></div>
     <div id="review-modal" class="modal"><div class="modal-content relative"><span class="close-button absolute top-4 right-6">&times;</span><div id="review-form-container"></div></div></div>
 
     <script type="module">
@@ -150,85 +123,15 @@
         import { getFirestore, collection, addDoc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // --- FIREBASE SETUP ---
-        const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_PROJECT_ID.appspot.com",
-            messagingSenderId: "YOUR_SENDER_ID",
-            appId: "YOUR_APP_ID"
-        };
-            
-        const appId = 'default-app-id';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
         
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const auth = getAuth(app);
 
         document.addEventListener('DOMContentLoaded', () => {
-            // --- DATA CATALOG ---
-            const productCatalog = {
-                'drinkware': { name: 'Drinkware & Barware', products: [
-                    { id: 'dw-001', name: '20oz Skinny Tumbler', price: 37.50, type: 'custom', images: ['https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/01_luxscribe_blue_tumbler_with_emily_johnson.jpg'], description: 'Personalized 20oz stainless steel skinny tumbler.', specs: {'Material': 'Powder-coated Stainless Steel'} },
-                    { id: 'dw-002', name: '40oz "Quencher" Style Tumbler', price: 45.00, type: 'custom', images: ['https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/02_luxscribe_engraved_blue_tumbler_and_lid.jpg'], description: 'Large tumbler with a full-wrap design.', specs: {'Material': 'Powder-coated Stainless Steel'} },
-                    { id: 'dw-003', name: 'Travel Coffee Mug (16oz)', price: 32.50, type: 'custom', images: ['https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/03_luxscribe_black_rise_and_grind_coffee_tumbler.jpg'], description: 'Insulated 16oz travel mug with your name or quote.', specs: {'Material': 'Insulated Stainless Steel'} },
-                    { id: 'dw-004', name: 'Powder-Coated Water Bottle', price: 35.00, type: 'custom', images: ['https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/04_luxscribe_engraved_blue_water_bottle.jpg'], description: 'Sports water bottle with your logo.', specs: {'Material': 'Powder-coated Stainless Steel'} },
-                    { id: 'dw-005', name: 'Custom Engraved Wine Glasses (Pair)', price: 42.50, type: 'custom', images: ['https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/05_luxscribe_two_engraved_wine_glasses.jpg'], description: 'A pair of elegant wine glasses, etched for a special occasion.', specs: {'Material': 'Glass'} },
-                    { id: 'dw-006', name: 'Engraved Whiskey Rocks Gift Set', price: 50.00, type: 'custom', images: ['https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/06_luxscribe_happy_birthday_dad_chocolate_box.jpg'], description: 'Engraved wooden box with whiskey stones.', specs: {'Material': 'Soapstone & Wood'} },
-                    { id: 'dw-007', name: 'Whiskey Tumbler Set', price: 90.00, type: 'custom', images: ['https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/07_luxscribe_whiskey_glasses_gift_set.jpg'], description: 'Two glasses, wooden coasters, and an engraved gift box.', specs: {'Material': 'Glass & Wood'} },
-                    { id: 'dw-008', name: 'Glass Decanter with Engraved Name', price: 100.00, type: 'custom', images: ['https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/08_luxscribe_engraved_glass_decanter.jpg'], description: 'A classic glass decanter with an engraved name or crest.', specs: {'Material': 'Glass'} },
-                    { id: 'dw-009', name: 'Engraved Hip Flask', price: 55.00, type: 'custom', images: ['https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/09_luxscribe_engraved_black_flask.jpg'], description: 'Stainless steel or leather-wrapped hip flask.', specs: {'Material': 'Stainless Steel'} },
-                    { id: 'dw-010', name: 'Engraved Beer Pint Glass', price: 32.50, type: 'custom', images: ['https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/10_luxscribe_engraved_beer_glass.jpg'], description: 'A classic pint glass for your favorite beer.', specs: {'Material': 'Glass'} },
-                    { id: 'dw-011', name: 'Custom Engraved Beer Stein', price: 77.50, type: 'custom', images: ['https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/11_luxscribe_engraved_beer_stein.jpg'], description: 'A ceramic or glass beer stein.', specs: {'Material': 'Ceramic or Glass'} },
-                    { id: 'dw-012', name: 'Engraved Cocktail Tool Set', price: 52.50, type: 'custom', images: ['https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/12_luxscribe_engraved_bar_tools_set.jpg'], description: 'Bar jigger and tool set with an engraved holder.', specs: {'Material': 'Stainless Steel & Wood'} },
-                    { id: 'dw-013', name: 'Personalised Wooden Cocktail Muddler', price: 21.00, type: 'custom', images: ['https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/13_luxscribe_stick_to_it_engraved_rolling_pin.jpg'], description: 'A wooden cocktail muddler.', specs: {'Material': 'Wood'} },
-                    { id: 'dw-014', name: 'Engraved Wooden Bottle Opener', price: 16.50, type: 'custom', images: ['https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/14_luxscribe_engraved_wooden_bottle_opener.jpg'], description: 'Handheld or fridge magnet style.', specs: {'Material': 'Wood & Stainless Steel'} },
-                    { id: 'dw-015', name: 'Engraved Cocktail Recipe Board', price: 62.50, type: 'custom', images: ['https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/15_luxscribe_happy_hour_engraved_serving_board.jpg'], description: 'A wall-mounted bar sign with your favorite recipe.', specs: {'Material': 'Wood'} },
-                    { id: 'dw-016', name: 'Engraved Stainless Growler', price: 70.00, type: 'custom', images: ['https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/16_luxscribe_engraved_metal_growler.jpg'], description: 'A large stainless steel growler for beer.', specs: {'Material': 'Stainless Steel'} },
-                    { id: 'dw-017', name: 'Engraved Champagne Flute Set', price: 90.00, type: 'custom', images: ['https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/17_luxscribe_engraved_champagne_flutes_gift_set.jpg'], description: 'A set of champagne flutes for a wedding or anniversary.', specs: {'Material': 'Glass'} },
-                    { id: 'dw-018', name: 'Coasters & Tumblers Gift Set', price: 67.50, type: 'custom', images: ['https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/18_luxscribe_cheers_and_greet_engraved_beer_caddy.jpg'], description: 'Matching engraved coasters and tumblers.', specs: {'Material': 'Varies'} },
-                    { id: 'dw-019', name: 'Acrylic Cocktail Stirrers (Set)', price: 12.50, type: 'custom', images: ['https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/19_luxscribe_set_of_engraved_spoons.jpg'], description: 'A set of custom acrylic cocktail stirrers.', specs: {'Material': 'Acrylic'} },
-                    { id: 'dw-020', name: 'Engraved Wooden Serving Board', price: 92.50, type: 'custom', images: ['https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/20_luxscribe_engraved_charcuterie_board.jpg'], description: 'A large wooden serving board for cheese or charcuterie.', specs: {'Material': 'Wood'} },
-                ]},
-                'coasters': { name: 'Coasters', products: [
-                    { id: 'co-001', name: 'Round Bamboo Coaster Set', price: 21.00, type: 'custom', images: ['https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/21_luxscribe_set_of_four_engraved_coasters.jpg'], description: 'Monogrammed round bamboo coasters (set of 4).', specs: {'Material': 'Bamboo'} },
-                    { id: 'co-002', name: 'Square Oak Veneer Coasters', price: 27.50, type: 'custom', images: ['https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/22_luxscribe_square_wooden_coasters_with_patterns.jpg'], description: 'Family name on square oak veneer coasters.', specs: {'Material': 'Oak Veneer'} },
-                    { id: 'co-003', name: 'Engraved Slate Coaster Set', price: 35.00, type: 'custom', images: ['https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/23_luxscribe_black_leather_coasters.jpg'], description: 'A classic set of engraved slate coasters.', specs: {'Material': 'Slate'} },
-                    { id: 'co-004', name: 'Marble Coasters', price: 42.50, type: 'custom', images: ['https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/24_luxscribe_round_wooden_coasters_with_engravings.jpg'], description: 'Elegant marble coasters with a single-line etch.', specs: {'Material': 'Marble'} },
-                    { id: 'co-005', name: 'Cork Coasters with Engraved Design', price: 20.00, type: 'custom', images: ['https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/25_luxscribe_square_leather_coasters.jpg'], description: 'Lightweight cork coasters with your design.', specs: {'Material': 'Cork'} },
-                    { id: 'co-006', name: 'Leather Coasters with Edge Stitching', price: 27.50, type: 'custom', images: ['https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/26_luxscribe_round_dog_portrait_coasters.jpg'], description: 'Engraved leather coasters with fine stitching.', specs: {'Material': 'Leather'} },
-                    { id: 'co-007', name: 'Photo-Engraved Wooden Coasters', price: 40.00, type: 'custom', images: ['https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/27_luxscribe_round_dog_illustrations_coasters.jpg'], description: 'Your photo engraved on a wooden coaster set.', specs: {'Material': 'Wood'} },
-                    { id: 'co-008', name: 'Map Location Coasters', price: 31.50, type: 'custom', images: ['https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/28_luxscribe_round_wooden_dog_head_coasters.jpg'], description: 'Your special location engraved on a coaster.', specs: {'Material': 'Wood'} },
-                    { id: 'co-009', name: 'Pet Photo Coasters', price: 31.50, type: 'custom', images: ['https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/29_luxscribe_beach_scene_coasters.jpg'], description: 'Your pet\'s face engraved on a coaster set.', specs: {'Material': 'Wood'} },
-                    { id: 'co-010', name: 'Geometric Pattern Coasters', price: 23.50, type: 'pre-made', images: ['https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/30_luxscribe_coasters_with_initials.jpg'], description: 'A modern set of geometric engraved coasters.', specs: {'Material': 'Wood'} },
-                    { id: 'co-011', name: 'Engraved Resin & Wood Coasters', price: 42.50, type: 'pre-made', images: ['https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/31_luxscribe_dark_wooden_engraved_coasters.jpg'], description: 'Unique hybrid coasters of resin and wood.', specs: {'Material': 'Resin & Wood'} },
-                    { id: 'co-012', name: 'Drink-Marker Coasters', price: 21.00, type: 'custom', images: ['https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/32_luxscribe_home_sweet_home_wooden_coasters.jpg'], description: 'Coasters with engraved initials to mark drinks.', specs: {'Material': 'Wood'} },
-                    { id: 'co-013', name: 'Business Logo Coasters', price: 6.50, type: 'custom', images: ['https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/33_luxscribe_hot_spot_wooden_hot_pad.jpg'], description: 'Perfect for corporate orders and branding.', specs: {'Material': 'Varies'} },
-                    { id: 'co-014', name: 'Wedding Guest Favour Coasters', price: 7.50, type: 'custom', images: ['https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/34_luxscribe_welcome_home_coasters.jpg'], description: 'Personalized coasters for your wedding guests.', specs: {'Material': 'Wood'} },
-                    { id: 'co-015', name: 'Heat-Resistant Bamboo Coaster', price: 25.00, type: 'custom', images: ['https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/35_luxscribe_wooden_coaster_holder.jpg'], description: 'A durable bamboo coaster with a silicone base.', specs: {'Material': 'Bamboo & Silicone'} },
-                    { id: 'co-016', name: 'Engraved Tile Coasters', price: 27.50, type: 'custom', images: ['https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/36_luxscribe_round_wooden_logo_coasters.jpg'], description: 'Your design engraved on ceramic tile coasters.', specs: {'Material': 'Ceramic'} },
-                    { id: 'co-017', name: 'Coaster Set with Engraved Holder', price: 50.00, type: 'custom', images: ['https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/37_luxscribe_cheers_wooden_bottle_opener.jpg'], description: 'A full set of coasters with a matching engraved stand.', specs: {'Material': 'Varies'} },
-                    { id: 'co-018', name: 'Puzzle Coasters', price: 40.00, type: 'custom', images: ['https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/61_luxscribe_wooden_clock_stencil.jpg'], description: 'A fun set of interlocking puzzle coasters.', specs: {'Material': 'Wood'} },
-                    { id: 'co-019', name: 'Themed Coasters', price: 26.00, type: 'custom', images: ['https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/62_luxscribe_wooden_clock_stencil_geometric_cutouts.jpg'], description: 'Coasters themed around sports, hobbies, or landmarks.', specs: {'Material': 'Varies'} },
-                    { id: 'co-020', name: 'Coaster & Bottle Opener Combo', price: 31.50, type: 'custom', images: ['https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/37_luxscribe_cheers_wooden_bottle_opener.jpg'], description: 'A wooden coaster with a built-in metal bottle opener.', specs: {'Material': 'Wood & Metal'} },
-                ]},
-                'pet-products': { name: 'Pet Products', products: [
-                    { id: 'pp-001', name: 'Engraved Stainless Pet ID Tag', price: 16.50, type: 'custom', images: ['https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/38_luxscribe_metal_pet_tag_luna.jpg'], description: 'A durable stainless steel ID tag for your pet.', specs: {'Material': 'Stainless Steel'} },
-                    { id: 'pp-002', name: 'Leather Personalised Collar', price: 40.00, type: 'custom', images: ['https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/40_luxscribe_leather_collar_with_buddy_tag.jpg'], description: 'A stylish leather collar with an engraved name plate.', specs: {'Material': 'Leather'} },
-                    { id: 'pp-003', name: 'Engraved Stainless Pet Bowl', price: 52.50, type: 'custom', images: ['https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/39_luxscribe_engraved_wooden_pet_bowl.jpg'], description: 'A stainless steel pet bowl with their name on the rim.', specs: {'Material': 'Stainless Steel'} },
-                    { id: 'pp-004', name: 'Personalised Dog Leash Tag & ID Tag Combo', price: 34.00, type: 'custom', images: ['https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/41_luxscribe_wooden_pet_tag_buddy.jpg'], description: 'A matching set for your dog\'s leash and collar.', specs: {'Material': 'Varies'} },
-                    { id: 'pp-005', name: 'Pet Memorial Plaque/Keepsake Box', price: 65.00, type: 'custom', images: ['https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/42_luxscribe_bone_shaped_pet_tags.jpg'], description: 'A beautiful wooden box to remember your pet.', specs: {'Material': 'Wood'} },
-                ]},
-                'wallets': { name: 'Personalized Wallets', products: [
-                     { id: 'wa-001', name: 'Laser-Engraved Bifold Leather Wallet', price: 60.00, type: 'custom', images: ['https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/55_luxscribe_leather_wallets_belts_key_fobs.jpg'], description: 'A classic leather wallet with initials or a name.', specs: {'Material': 'Leather'} },
-                     { id: 'wa-002', name: 'Slim Front-Pocket Card Holder', price: 35.00, type: 'custom', images: ['https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/56_luxscribe_leather_wallets_and_accessories.jpg'], description: 'A minimalist leather card holder with a monogram.', specs: {'Material': 'Leather'} },
-                     { id: 'wa-004', name: 'Metal Minimalist Wallet', price: 47.50, type: 'custom', images: ['https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/59_luxscribe_metal_wallet_with_geometric_design.jpg'], description: 'Anodized aluminum wallet with an etched pattern.', specs: {'Material': 'Anodized Aluminum'} },
-                ]},
-            };
-
-            // --- STATE MANAGEMENT ---
-            let cart = [];
-
+            
             // --- RENDER FUNCTIONS ---
             const mainContent = document.getElementById('main-content');
             
@@ -238,73 +141,27 @@
                         <video autoplay loop muted playsinline class="hero-video" poster="https://placehold.co/1920x1080/0a0a0a/333333?text=Luxcribe+Engraving"><source src="https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/62_Laser_Engraving_Timelapse_Video.mp4" type="video/mp4"></video>
                         <div class="video-overlay"></div><div class="hero-content"><h2 class="text-5xl md:text-6xl font-extrabold mb-4">Your Vision,<br>Laser Crafted.</h2><p class="text-xl md:text-2xl mb-8">Personalized gifts, unique decor, and custom creations.</p></div>
                     </section>
-                    <section class="py-20 bg-black"><div class="container"><h3 class="section-title text-4xl md:text-5xl text-center">Shop Our Collections</h3><p class="section-subtitle text-center text-gray-400">Find the perfect item, whether you need a ready-to-ship gift or a fully personalized creation.</p><div class="grid grid-cols-1 md:grid-cols-2 gap-8"><div class="card p-8 text-center bg-gray-900"><h4 class="text-3xl font-bold mb-4">Pre-Made Products</h4><p class="text-gray-400 mb-6 flex-grow">Browse our curated collection of ready-to-ship designs, perfect for last-minute gifts.</p><button class="btn btn-primary nav-link" data-page="shop">View All Products</button></div><div class="card p-8 text-center bg-gray-900"><h4 class="text-3xl font-bold mb-4">Customize Your Product</h4><p class="text-gray-400 mb-6 flex-grow">Have a unique idea? Start from scratch and create a one-of-a-kind item with our help.</p><button class="btn btn-primary nav-link" data-page="custom-form">Start Your Custom Order</button></div></div></div></section>
+                    <section class="py-20 bg-black"><div class="container"><h3 class="section-title text-4xl md:text-5xl text-center">Shop Our Collections</h3><p class="section-subtitle text-center text-gray-400">Find the perfect item, whether you need a ready-to-ship gift or a fully personalized creation.</p><div class="grid grid-cols-1 md:grid-cols-2 gap-8"><div class="card p-8 text-center bg-gray-900"><h4 class="text-3xl font-bold mb-4">Our Products</h4><p class="text-gray-400 mb-6 flex-grow">Browse our curated collection of ready-to-ship designs, perfect for last-minute gifts.</p><button class="btn btn-primary nav-link" data-page="shop">View All Products</button></div><div class="card p-8 text-center bg-gray-900"><h4 class="text-3xl font-bold mb-4">Customize Your Product</h4><p class="text-gray-400 mb-6 flex-grow">Have a unique idea? Start from scratch and create a one-of-a-kind item with our help.</p><button class="btn btn-primary nav-link" data-page="custom-form">Start Your Custom Order</button></div></div></div></section>
                     <section id="reviews" class="py-20 bg-gray-950"><div class="container"><h3 class="section-title text-4xl md:text-5xl text-center">What Our Customers Say</h3><div class="review-slider-container max-w-3xl mx-auto mt-8"><div class="review-slider"></div></div><div class="text-center mt-8"><button class="btn btn-primary" id="leave-review-btn">Leave a Review</button></div></div></section>
                 </div>`;
 
-            const renderShopPage = (filterCategory = 'all') => {
-                const productsToShow = filterCategory === 'all' 
-                    ? Object.values(productCatalog).flatMap(cat => cat.products.map(p => ({...p, categoryId: Object.keys(productCatalog).find(key => productCatalog[key] === cat)})))
-                    : productCatalog[filterCategory].products.map(p => ({...p, categoryId: filterCategory}));
-
-                return `
+            const renderShopPage = () => `
                 <div id="shop-page" class="page">
                     <section class="py-20 bg-black">
                         <div class="container">
-                            <h2 class="section-title text-4xl md:text-5xl text-center">${filterCategory === 'all' ? 'All Products' : productCatalog[filterCategory].name}</h2>
-                            <div class="my-8 max-w-lg mx-auto"><input type="search" id="product-search" placeholder="Search for products..." class="form-input"></div>
-                            <div id="product-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mt-12">
-                                ${productsToShow.map(p => `
-                                    <div class="card cursor-pointer nav-link" data-page="product" data-category="${p.categoryId}" data-product="${p.id}">
-                                        <div class="relative"><img src="${p.images[0]}" alt="${p.name}" class="w-full h-56 object-cover" loading="lazy"></div>
-                                        <div class="card-content"><h4 class="font-bold text-lg">${p.name}</h4><p class="text-2xl font-bold mt-2">$${p.price.toFixed(2)}</p></div>
-                                    </div>
-                                `).join('')}
-                            </div>
+                            <h2 class="section-title text-4xl md:text-5xl text-center">All Products</h2>
+                            <div id='collection-component-1755176416758'></div>
                         </div>
                     </section>
                 </div>`;
-            }
 
-            const renderProductPage = (categoryId, productId) => {
-                const product = productCatalog[categoryId].products.find(p => p.id === productId);
-                return `
-                    <div id="product-page-${productId}" class="page">
-                         <section class="py-12 bg-black">
-                            <div class="container">
-                                <p class="text-gray-400 mb-8"><a href="#" class="nav-link" data-page="home">Home</a> > <a href="#" class="nav-link" data-page="shop">Shop</a> > <span class="font-bold">${product.name}</span></p>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-                                    <div>
-                                        <img id="main-product-image" src="${product.images[0]}" class="w-full rounded-lg shadow-lg">
-                                        <div class="flex space-x-2 mt-4">${product.images.map(img => `<img src="${img}" class="w-20 h-20 object-cover rounded-md cursor-pointer border-2 border-transparent hover:border-indigo-500 gallery-thumb" loading="lazy">`).join('')}</div>
-                                    </div>
-                                    <div>
-                                        <h2 class="text-4xl font-bold">${product.name}</h2>
-                                        <p class="text-3xl text-indigo-400 font-bold my-4">$${product.price.toFixed(2)}</p>
-                                        <p class="text-green-400 font-semibold">In Stock - ${product.type === 'pre-made' ? 'Ready to Ship' : 'Made to Order'}</p>
-                                        <div class="mt-6"><button class="btn btn-primary w-full add-to-cart-btn" data-product-id="${product.id}" data-category-id="${categoryId}">Add to Cart & Customize</button></div>
-                                        <div class="mt-8 border-t border-gray-700 pt-6">
-                                            <div id="product-tabs" class="flex border-b border-gray-700"><button class="tab-button active" data-tab="description">Description</button><button class="tab-button" data-tab="specs">Specifications</button><button class="tab-button" data-tab="shipping">Shipping</button></div>
-                                            <div id="tab-content-description" class="tab-content active mt-4"><p>${product.description}</p></div>
-                                            <div id="tab-content-specs" class="tab-content mt-4"><ul class="space-y-2">${Object.entries(product.specs).map(([key, value]) => `<li><strong>${key}:</strong> ${value}</li>`).join('')}</ul></div>
-                                            <div id="tab-content-shipping" class="tab-content mt-4"><p>Standard shipping Australia-wide. Local pickup available. See checkout for details.</p></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-                        <section id="product-reviews" class="py-20 bg-gray-950"><div class="container"><h3 class="section-title text-4xl md:text-5xl text-center">Top Reviews</h3><div class="review-slider-container max-w-3xl mx-auto mt-8"><div class="review-slider"></div></div><div class="text-center mt-8"><button class="btn btn-primary" id="leave-review-btn">Leave a Review for this Product</button></div></div></section>
-                    </div>`;
-            };
-
-            const renderCustomFormPage = (productName = '') => `
+            const renderCustomFormPage = () => `
                 <div id="custom-form-page" class="page">
                     <section id="how-to-order" class="py-20 bg-gray-950">
                         <div class="container max-w-2xl mx-auto">
                             <h3 class="section-title text-4xl md:text-5xl text-center">Customize Your Order</h3>
                             <p class="section-subtitle text-center text-gray-400">Fill out the details below. We'll email you a design proof and payment instructions.</p>
                             <form id="custom-order-form" class="space-y-6 bg-[#121212] p-8 rounded-lg">
-                                <div><label class="block mb-2">Product to Customize *</label><select name="product-category" class="form-select">${Object.entries(productCatalog).map(([catId, cat]) => `<option value="${cat.name}" ${cat.products.some(p=>p.name === productName) ? 'selected' : ''}>${cat.name}</option>`).join('')}</select></div>
                                 <div><label class="block mb-2">Full Name *</label><input type="text" name="name" required class="form-input"></div>
                                 <div><label class="block mb-2">Email *</label><input type="email" name="email" required class="form-input"></div>
                                 <div><label class="block mb-2">Customization Details *</label><textarea name="details" id="order-summary" rows="6" required class="form-input" placeholder="Describe your design, text, fonts, and placement."></textarea></div>
@@ -343,24 +200,88 @@
                 window.scrollTo(0, 0);
                 let content = '';
                 if (page === 'home') content = renderHomePage();
-                else if (page === 'shop') content = renderShopPage(options.category);
-                else if (page === 'product') content = renderProductPage(options.category, options.product);
-                else if (page === 'custom-form') content = renderCustomFormPage(options.productName);
+                else if (page === 'shop') content = renderShopPage();
+                else if (page === 'custom-form') content = renderCustomFormPage();
                 else if (page === 'contact') content = renderContactPage();
                 mainContent.innerHTML = content;
                 mainContent.querySelector('.page').classList.add('active');
 
-                if (page === 'home' || page === 'product') {
+                if (page === 'home') {
                     initReviewSlider();
+                }
+                
+                if (page === 'shop') {
+                    (function () {
+                      var scriptURL = 'https://sdks.shopifycdn.com/buy-button/latest/buy-button-storefront.min.js';
+                      if (window.ShopifyBuy) {
+                        if (window.ShopifyBuy.UI) {
+                          ShopifyBuyInit();
+                        } else {
+                          loadScript();
+                        }
+                      } else {
+                        loadScript();
+                      }
+                      function loadScript() {
+                        var script = document.createElement('script');
+                        script.async = true;
+                        script.src = scriptURL;
+                        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(script);
+                        script.onload = ShopifyBuyInit;
+                      }
+                      function ShopifyBuyInit() {
+                        var client = ShopifyBuy.buildClient({
+                          domain: 'dbrd1n-q5.myshopify.com',
+                          storefrontAccessToken: 'e8f4d338978c794bf1836c1c4fd7dc56',
+                        });
+                        ShopifyBuy.UI.onReady(client).then(function (ui) {
+                          ui.createComponent('collection', {
+                            id: '455555776757',
+                            node: document.getElementById('collection-component-1755176416758'),
+                            moneyFormat: '%24%7B%7Bamount%7D%7D',
+                            options: {
+                              "product": {
+                                "styles": {
+                                  "product": {
+                                    "@media (min-width: 601px)": {
+                                      "max-width": "calc(25% - 20px)",
+                                      "margin-left": "20px",
+                                      "margin-bottom": "50px",
+                                      "width": "calc(25% - 20px)"
+                                    }
+                                  },
+                                   "title": {
+                                    "color": "#ffffff"
+                                  },
+                                  "price": {
+                                    "color": "#e0e0e0"
+                                  },
+                                  "button": {
+                                    ":hover": { "background-color": "#4e61a4" },
+                                    "background-color": "#576cb6",
+                                    ":focus": { "background-color": "#4e61a4" },
+                                    "border-radius": "11px",
+                                    "padding-left": "66px",
+                                    "padding-right": "66px"
+                                  }
+                                },
+                                "text": { "button": "Add to cart" }
+                              },
+                              "productSet": { "styles": { "products": { "@media (min-width: 601px)": { "margin-left": "-20px" } } } },
+                              "modalProduct": { "contents": { "img": false, "imgWithCarousel": true, "button": false, "buttonWithQuantity": true }, "styles": { "product": { "@media (min-width: 601px)": { "max-width": "100%", "margin-left": "0px", "margin-bottom": "0px" } }, "button": { ":hover": { "background-color": "#4e61a4" }, "background-color": "#576cb6", ":focus": { "background-color": "#4e61a4" }, "border-radius": "11px", "padding-left": "66px", "padding-right": "66px" } }, "text": { "button": "Add to cart" } },
+                              "option": {},
+                              "cart": { "styles": { "button": { ":hover": { "background-color": "#4e61a4" }, "background-color": "#576cb6", ":focus": { "background-color": "#4e61a4" }, "border-radius": "11px" } }, "text": { "total": "Subtotal", "button": "Checkout" } },
+                              "toggle": { "styles": { "toggle": { "background-color": "#576cb6", ":hover": { "background-color": "#4e61a4" }, ":focus": { "background-color": "#4e61a4" } } } }
+                            },
+                          });
+                        });
+                      }
+                    })();
                 }
             };
 
             // --- INITIALIZATION ---
             navigateTo('home');
-            const shopDropdown = document.getElementById('shop-dropdown');
-            shopDropdown.innerHTML = `<a href="#" class="nav-link" data-page="shop" data-category="all">All Products</a>` + Object.entries(productCatalog).map(([catId, cat]) => `<a href="#" class="nav-link" data-page="shop" data-category="${catId}">${cat.name}</a>`).join('');
-            const footerShopLinks = document.getElementById('footer-links-shop');
-            footerShopLinks.innerHTML = Object.keys(productCatalog).map(catId => `<li><a href="#" class="hover:text-white nav-link" data-page="shop" data-category="${catId}">${productCatalog[catId].name}</a></li>`).join('');
             document.getElementById('footer-copyright').innerHTML = `&copy; ${new Date().getFullYear()} Luxcribe. All Rights Reserved.`;
 
 
@@ -370,19 +291,6 @@
                 if (navLink) {
                     e.preventDefault();
                     navigateTo(navLink.dataset.page, navLink.dataset);
-                }
-                const tabButton = e.target.closest('.tab-button');
-                if(tabButton) {
-                    tabButton.parentElement.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
-                    tabButton.classList.add('active');
-                    tabButton.parentElement.nextElementSibling.parentElement.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-                    document.getElementById(`tab-content-${tabButton.dataset.tab}`).classList.add('active');
-                }
-                const addToCartBtn = e.target.closest('.add-to-cart-btn');
-                if(addToCartBtn) {
-                    const { productId, categoryId } = addToCartBtn.dataset;
-                    const product = productCatalog[categoryId].products.find(p => p.id === productId);
-                    addToCart(product);
                 }
                 if(e.target.id === 'leave-review-btn') {
                     showReviewModal();
@@ -395,91 +303,6 @@
             document.body.addEventListener('change', (e) => {
                 if(e.target.id === 'bulk-order-checkbox') {
                     document.getElementById('bulk-order-fields').classList.toggle('hidden', !e.target.checked);
-                }
-            });
-             document.body.addEventListener('input', e => {
-                if (e.target.id === 'product-search') {
-                    const searchTerm = e.target.value.toLowerCase();
-                    const grid = document.getElementById('product-grid');
-                    grid.querySelectorAll('.card').forEach(card => {
-                        const productName = card.querySelector('h4').textContent.toLowerCase();
-                        card.style.display = productName.includes(searchTerm) ? '' : 'none';
-                    });
-                }
-            });
-
-            // --- CART LOGIC ---
-            const cartModal = document.getElementById('cart-modal');
-            function addToCart(product) {
-                const existingItem = cart.find(item => item.id === product.id);
-                if (existingItem) existingItem.quantity++;
-                else cart.push({ ...product, quantity: 1 });
-                updateCart();
-                showModal(`${product.name} added to cart!`);
-            }
-            function updateCart() {
-                const cartItemsContainer = document.getElementById('cart-items-container');
-                const cartFooter = document.getElementById('cart-footer');
-                const cartBadge = document.getElementById('cart-badge');
-                
-                cartItemsContainer.innerHTML = '';
-                if (cart.length === 0) {
-                    cartItemsContainer.innerHTML = '<p class="text-gray-400 text-center">Your cart is empty.</p>';
-                    cartFooter.innerHTML = '';
-                } else {
-                    cart.forEach((item, index) => {
-                        const cartItemEl = document.createElement('div');
-                        cartItemEl.className = 'flex justify-between items-center bg-[#1a1a1a] p-4 rounded-lg';
-                        cartItemEl.innerHTML = `
-                            <div><h4 class="font-bold text-white">${item.name}</h4><p class="text-indigo-400">$${(item.price * item.quantity).toFixed(2)}</p></div>
-                            <div class="flex items-center gap-4">
-                                <div class="flex items-center gap-2">
-                                    <button class="quantity-change text-lg text-gray-400 hover:text-white" data-index="${index}" data-change="-1">-</button>
-                                    <span class="font-bold">${item.quantity}</span>
-                                    <button class="quantity-change text-lg text-gray-400 hover:text-white" data-index="${index}" data-change="1">+</button>
-                                </div>
-                                <button class="remove-item text-red-500 hover:text-red-400" data-index="${index}">Remove</button>
-                            </div>
-                        `;
-                        cartItemsContainer.appendChild(cartItemEl);
-                    });
-                    const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-                    cartFooter.innerHTML = `<div class="text-right"><p class="text-lg">Subtotal: <span class="font-bold text-xl text-indigo-400">$${subtotal.toFixed(2)}</span></p><button id="proceed-to-order-btn" class="btn btn-primary mt-4">Proceed to Order</button></div>`;
-                }
-                const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-                cartBadge.textContent = totalItems;
-                cartBadge.classList.toggle('hidden', totalItems === 0);
-            }
-
-            document.getElementById('cart-button').addEventListener('click', () => cartModal.style.display = 'flex');
-            cartModal.querySelector('.close-button').addEventListener('click', () => cartModal.style.display = 'none');
-            cartModal.addEventListener('click', e => {
-                 if (e.target.id === 'proceed-to-order-btn') {
-                    let orderSummary = "I would like to order the following items:\n\n";
-                    cart.forEach(item => {
-                        orderSummary += `${item.quantity} x ${item.name}\n`;
-                    });
-                    orderSummary += "\nPlease provide customization details for each 'Custom' item below:\n";
-                    navigateTo('custom-form');
-                    setTimeout(() => {
-                        const orderSummaryEl = document.getElementById('order-summary');
-                        if (orderSummaryEl) orderSummaryEl.value = orderSummary;
-                    }, 100);
-                    cartModal.style.display = 'none';
-                }
-                const quantityButton = e.target.closest('.quantity-change');
-                if (quantityButton) {
-                    const index = parseInt(quantityButton.dataset.index);
-                    const change = parseInt(quantityButton.dataset.change);
-                    cart[index].quantity += change;
-                    if (cart[index].quantity <= 0) cart.splice(index, 1);
-                    updateCart();
-                }
-                const removeButton = e.target.closest('.remove-item');
-                if (removeButton) {
-                    const index = parseInt(removeButton.dataset.index);
-                    cart.splice(index, 1);
-                    updateCart();
                 }
             });
             
@@ -519,54 +342,50 @@
             reviewModal.querySelector('.close-button').addEventListener('click', () => reviewModal.style.display = 'none');
             
             function initReviewSlider() {
-                onAuthStateChanged(auth, (user) => {
-                    if (user) {
-                        const slider = document.querySelector('.review-slider');
-                        if (!slider) return;
-                        const reviewsCollectionRef = collection(db, `/artifacts/${appId}/public/data/reviews`);
-                        const q = query(reviewsCollectionRef, orderBy('timestamp', 'desc'));
-                        
-                        onSnapshot(q, (snapshot) => {
-                            if (snapshot.empty) {
-                                slider.innerHTML = '<p class="text-gray-500 text-center w-full">No reviews yet. Be the first!</p>';
-                                return;
-                            }
-                            slider.innerHTML = snapshot.docs.map(doc => {
-                                const review = doc.data();
-                                const stars = '<span class="text-yellow-400">' + '&#9733;'.repeat(review.rating) + '</span>' + '<span class="text-gray-600">' + '&#9733;'.repeat(5 - review.rating) + '</span>';
-                                return `<div class="review-slide"><div class="card p-6"><div class="text-2xl">${stars}</div><p class="text-gray-300 mt-4">"${review.review}"</p><h5 class="text-lg font-bold text-white mt-4">- ${review.name}</h5></div></div>`;
-                            }).join('');
-                        }, (error) => {
-                            console.error("Error fetching reviews:", error);
-                            slider.innerHTML = '<p class="text-red-500 text-center w-full">Could not load reviews.</p>';
-                        });
-                    } else {
-                        signInAnonymously(auth).catch(error => console.error("Anonymous sign-in failed:", error));
+                if (!auth.currentUser) return;
+                const slider = document.querySelector('.review-slider');
+                if (!slider) return;
+                const reviewsCollectionRef = collection(db, `/artifacts/${appId}/public/data/reviews`);
+                const q = query(reviewsCollectionRef, orderBy('timestamp', 'desc'));
+                
+                onSnapshot(q, (snapshot) => {
+                    if (snapshot.empty) {
+                        slider.innerHTML = '<p class="text-gray-500 text-center w-full">No reviews yet. Be the first!</p>';
+                        return;
                     }
+                    slider.innerHTML = snapshot.docs.map(doc => {
+                        const review = doc.data();
+                        const stars = '<span class="text-yellow-400">' + '&#9733;'.repeat(review.rating) + '</span>' + '<span class="text-gray-600">' + '&#9733;'.repeat(5 - review.rating) + '</span>';
+                        return `<div class="review-slide"><div class="card p-6"><div class="text-2xl">${stars}</div><p class="text-gray-300 mt-4">"${review.review}"</p><h5 class="text-lg font-bold text-white mt-4">- ${review.name}</h5></div></div>`;
+                    }).join('');
+                }, (error) => {
+                    console.error("Error fetching reviews:", error);
+                    slider.innerHTML = '<p class="text-red-500 text-center w-full">Could not load reviews.</p>';
                 });
             }
 
-            function showModal(message) {
-                const modal = document.getElementById('confirmation-modal');
-                const modalContent = document.getElementById('modal-message-content');
-                modalContent.innerHTML = `<p class="text-lg mt-4">${message}</p><button id="go-to-cart-btn" class="btn btn-primary mt-4">Go to Cart</button>`;
-                modal.style.display = 'flex';
-                document.getElementById('go-to-cart-btn').addEventListener('click', () => {
-                    modal.style.display = 'none';
-                    document.getElementById('cart-button').click();
-                });
-            }
-            document.getElementById('confirmation-modal').querySelector('.close-button').onclick = () => {
-                document.getElementById('confirmation-modal').style.display = 'none';
-            }
+            // --- AUTHENTICATION ---
+            const authenticateUser = async () => {
+                try {
+                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+                } catch (error) {
+                    console.error("Authentication failed:", error);
+                }
+            };
 
-            // Initial auth check
-            const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-            if (initialAuthToken) {
-                signInWithCustomToken(auth, initialAuthToken).catch(err => signInAnonymously(auth));
-            } else {
-                signInAnonymously(auth);
-            }
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    if (document.querySelector('.review-slider')) {
+                         initReviewSlider();
+                    }
+                }
+            });
+
+            authenticateUser();
         });
     </script>
 </body>
