@@ -45,6 +45,12 @@
         .nav-link::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 2px; background-color: white; transform: scaleX(0); transition: transform 0.3s ease; }
         .nav-link:hover::after { transform: scaleX(1); }
         .cart-badge { position: absolute; top: -8px; right: -12px; background-color: #ef4444; color: white; border-radius: 50%; padding: 0.1rem 0.4rem; font-size: 0.75rem; font-weight: bold; line-height: 1; }
+        .prose { max-width: 65ch; margin-left: auto; margin-right: auto; }
+        .prose-invert { color: #d1d5db; }
+        .prose-invert h1, .prose-invert h2, .prose-invert h3, .prose-invert h4 { color: #fff; }
+        .prose-invert a { color: #818cf8; }
+        .prose-invert a:hover { color: #6366f1; }
+        .prose-invert ul > li::before { background-color: #4b5563; }
     </style>
 </head>
 <body>
@@ -97,18 +103,18 @@
                 <div>
                     <h4 class="font-bold text-lg mb-4">Customer Support</h4>
                     <ul class="space-y-2 text-gray-400">
-                        <li><a href="#" class="hover:text-white nav-link" data-page="contact">Contact Us</a></li>
-                        <li><a href="#" class="hover:text-white">FAQs</a></li>
-                        <li><a href="#" class="hover:text-white">Track Your Order</a></li>
+                        <li><a href="mailto:swapnil.poudyal008@gmail.com" class="hover:text-white">Contact Us</a></li>
+                        <li><a href="#" class="hover:text-white nav-link" data-page="faq">FAQs</a></li>
+                        <li><a href="#" class="hover:text-white nav-link" data-page="track-order">Track Your Order</a></li>
                     </ul>
                 </div>
                 <div>
                     <h4 class="font-bold text-lg mb-4">Our Policies</h4>
                     <ul class="space-y-2 text-gray-400">
-                        <li><a href="#" class="hover:text-white">Shipping & Delivery</a></li>
-                        <li><a href="#" class="hover:text-white">Returns & Refunds</a></li>
-                        <li><a href="#" class="hover:text-white">Privacy Policy</a></li>
-                        <li><a href="#" class="hover:text-white">Terms of Service</a></li>
+                        <li><a href="#" class="hover:text-white nav-link" data-page="shipping">Shipping & Delivery</a></li>
+                        <li><a href="#" class="hover:text-white nav-link" data-page="returns">Returns & Refunds</a></li>
+                        <li><a href="#" class="hover:text-white nav-link" data-page="privacy">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-white nav-link" data-page="terms">Terms of Service</a></li>
                     </ul>
                 </div>
                 <div>
@@ -207,6 +213,61 @@
                 </section>
             </div>
         `;
+
+        const renderInfoPage = (title, content) => `
+            <div class="page">
+                <section class="py-20 bg-black">
+                    <div class="container max-w-4xl mx-auto prose prose-invert lg:prose-xl">
+                        <h1 class="text-4xl md:text-5xl font-bold text-center mb-12">${title}</h1>
+                        ${content}
+                    </div>
+                </section>
+            </div>`;
+
+        const pageContent = {
+            faq: { title: "Frequently Asked Questions", content: `
+                <h2>How long do orders take?</h2><p>Processing (engraving) time for personalised items is 4–5 business days. Shipping time depends on the chosen carrier and service.</p>
+                <h2>What file types do you accept?</h2><p>Preferred: vector files (SVG, AI, EPS, PDF). High-resolution raster files (PNG, JPEG) at 300 DPI are acceptable for photo-style engravings.</p>
+                <h2>Can you engrave any material?</h2><p>We commonly engrave wood, glass, acrylic, anodised metals, leather and many plastics. Some food-contact plastics or unknown composites may be unsuitable — we’ll advise if needed.</p>
+                <h2>Can I cancel or change my order?</h2><p>Changes or cancellations are possible only while the order status is still Processing. Contact us immediately and we’ll do our best to help.</p>
+                <h2>Are personalised items refundable?</h2><p>Personalised items are not accepted for change-of-mind returns due to their custom nature. This does not affect your rights under the Australian Consumer Law if the product is faulty or does not meet consumer guarantees.</p>
+                <h2>What if my item arrives faulty or damaged?</h2><p>If an item is faulty or damaged we will repair, replace or refund in accordance with the Australian Consumer Law. Please email photos and your order number so we can assess the issue.</p>
+            ` },
+            "track-order": { title: "Track Your Order", content: `<p>Once your order ships you will receive a dispatch email with a tracking number and link. Use the tracking link to follow delivery updates on the carrier’s website. If there’s a delivery issue, email <a href="mailto:swapnil.poudyal008@gmail.com" class="text-indigo-400 hover:underline">swapnil.poudyal008@gmail.com</a> with your order number and we will investigate and assist with the carrier.</p>` },
+            shipping: { title: "Shipping & Delivery", content: `
+                <h2>Processing time</h2><p>4–5 business days for personalised items (from order acceptance to dispatch).</p>
+                <h2>Carriers</h2><p>Domestic shipments are sent via Australia Post and selected local couriers depending on the service chosen at checkout.</p>
+                <h2>Shipping cost</h2><p>Calculated at checkout. Free standard shipping for orders over $150 AUD.</p>
+                <h2>Dispatch notice</h2><p>You’ll get an order confirmation when payment is taken and a dispatch email with tracking when your order leaves our studio.</p>
+                <h2>International</h2><p>Available on request; international customers are responsible for customs, duties and taxes.</p>
+                <h2>Delays</h2><p>Carrier or weather delays may extend delivery times; we will notify you if significant delays occur.</p>
+            ` },
+            returns: { title: "Returns & Refunds", content: `
+                <h2>Overview</h2><p>We aim to be fair while protecting our small business. All refunds, returns and repairs are handled in accordance with the Australian Consumer Law (ACL). If a product has a major problem you may choose a refund or replacement; for minor problems we may offer repair.</p>
+                <h2>Personalised items</h2><p>Custom / personalised products are not eligible for change-of-mind returns. Please check spelling and design carefully before confirming your order.</p>
+                <h2>Non-personalised items</h2><p>May be returned for change-of-mind within 14 days of delivery if unused, in original condition and packaging. Return postage for change-of-mind is paid by the buyer.</p>
+                <h2>Faulty/damaged items</h2><p>If an item is faulty, damaged in transit or materially not as described, email <a href="mailto:swapnil.poudyal008@gmail.com" class="text-indigo-400 hover:underline">swapnil.poudyal008@gmail.com</a> with photos and your order number. We will assess the issue and where appropriate provide a repair, replacement or refund at no cost to you. If we ask for the item back for inspection and the fault is confirmed, we will cover reasonable return postage.</p>
+                <h2>How to request a return/repair/refund</h2><p>Email <a href="mailto:swapnil.poudyal008@gmail.com" class="text-indigo-400 hover:underline">swapnil.poudyal008@gmail.com</a> with your order number, photos and a brief description. We aim to reply within 1 business day.</p>
+                <h2>Escalation</h2><p>If you remain unsatisfied, you may contact NSW Fair Trading or the ACCC for dispute resolution guidance.</p>
+            ` },
+            privacy: { title: "Privacy Policy", content: `
+                <h2>Summary</h2><p>Luxcribe collects personal information to process orders, deliver products and provide customer service. We follow the Privacy Act and the Australian Privacy Principles (APPs).</p>
+                <h2>What we collect</h2><ul><li>Name, email, phone, postal address</li><li>Order/payment details (processed by a third party; we do not store full card numbers)</li><li>Artwork files you upload</li><li>Website analytics and cookies.</li></ul>
+                <h2>How we use it</h2><p>To fulfil orders, communicate about orders and returns, process payments and (with consent) send marketing. We do not sell your personal information.</p>
+                <h2>Sharing</h2><p>We may share order details with couriers and payment processors; some third-party services may be located overseas — we take reasonable steps to protect your information.</p>
+                <h2>Access/correction</h2><p>Email <a href="mailto:swapnil.poudyal008@gmail.com" class="text-indigo-400 hover:underline">swapnil.poudyal008@gmail.com</a> to request access or correction.</p>
+                <h2>Security/retention</h2><p>We use reasonable measures to protect personal information and retain it only as required for business or legal obligations.</p>
+            ` },
+            terms: { title: "Terms of Service", content: `
+                <h2>Acceptance</h2><p>By placing an order with Luxcribe you agree to these Terms.</p>
+                <h2>Business details</h2><p>Luxcribe — Operator: Swapnil Poudyal (sole trader) — ABN 92 274 540 850 — Address: 64 Jersey Avenue, Mortdale NSW 2223 — Governing law: New South Wales, Australia.</p>
+                <h2>Orders</h2><p>Orders are accepted when payment is processed and an order confirmation is sent. We may refuse or cancel orders in limited circumstances; refunded promptly if cancelled after payment.</p>
+                <h2>Pricing & GST</h2><p>Prices include GST where applicable. Payments are processed by secure third-party providers; Luxcribe does not store full card details.</p>
+                <h2>Intellectual property</h2><p>You warrant you own or are licensed to use any designs or images you upload. Luxcribe retains copyright in its website content and templates.</p>
+                <h2>Consumer guarantees & liability</h2><p>Nothing in these Terms attempts to exclude your rights under the Australian Consumer Law. To the extent permitted by law, Luxcribe’s liability is limited to remedies required under ACL.</p>
+                <h2>Changes to terms</h2><p>We may update terms; material changes will be posted and customers notified where relevant.</p>
+            ` }
+        };
         
         // --- ROUTING & PAGE DISPLAY ---
         const navigateTo = (page) => {
@@ -216,6 +277,10 @@
             else if (page === 'shop') content = renderShopPage();
             else if (page === 'custom-form') content = renderCustomFormPage();
             else if (page === 'contact') content = renderContactPage();
+            else if (pageContent[page]) {
+                const { title, content: pageHTML } = pageContent[page];
+                content = renderInfoPage(title, pageHTML);
+            }
             mainContent.innerHTML = content;
             mainContent.querySelector('.page').classList.add('active');
 
@@ -237,6 +302,7 @@
         function initializeShopifyCollection(collectionId) {
             if (!shopifyUI) return;
             const container = document.getElementById('collection-component-container');
+            if (!container) return;
             container.innerHTML = ''; // Clear previous collection
             const newId = `collection-component-${Date.now()}`;
             container.innerHTML = `<div id="${newId}"></div>`;
@@ -265,7 +331,7 @@
                     document.getElementById('mobile-menu').classList.toggle('hidden');
                 }
                 const cartIcon = e.target.closest('#cart-icon');
-                if (cartIcon && shopifyUI && shopifyUI.components.cart[0]) {
+                if (cartIcon && shopifyUI && shopifyUI.components.cart && shopifyUI.components.cart[0]) {
                     shopifyUI.components.cart[0].toggle.setVisible(true);
                 }
             });
