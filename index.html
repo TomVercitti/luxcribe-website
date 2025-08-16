@@ -258,39 +258,80 @@
 
             const productOptions = {
                 "product": {
-                    "styles": { 
-                        "product": { "@media (min-width: 601px)": { "max-width": "calc(25% - 20px)", "margin-left": "20px", "margin-bottom": "50px", "width": "calc(25% - 20px)" }, "text-align": "center" }, 
-                        "title": { "color": "#ffffff" }, "price": { "color": "#e0e0e0" }, 
-                        "button": { ":hover": { "background-color": "#4e61a4" }, "background-color": "#576cb6", ":focus": { "background-color": "#4e61a4" }, "border-radius": "11px" } 
+                    "styles": {
+                        "product": {
+                            "@media (min-width: 601px)": { "max-width": "calc(25% - 20px)", "margin-left": "20px", "margin-bottom": "50px", "width": "calc(25% - 20px)" },
+                            "text-align": "center",
+                            "display": "flex",
+                            "flex-direction": "column",
+                            "height": "100%"
+                        },
+                        "imgWrapper": { "flex-shrink": "0" },
+                        "contents": {
+                            "flex-grow": "1",
+                            "display": "flex",
+                            "flex-direction": "column",
+                            "padding": "15px"
+                        },
+                         "title": { "color": "#ffffff", "font-size": "1.1rem", "margin-top": "10px" },
+                         "price": { "color": "#e0e0e0", "font-weight": "bold", "font-size": "1.2rem", "margin-top": "auto", "padding-top": "10px" },
+                         "button": { 
+                            ":hover": { "background-color": "#4e61a4" }, 
+                            "background-color": "#576cb6", 
+                            ":focus": { "background-color": "#4e61a4" }, 
+                            "border-radius": "8px",
+                            "margin-top": "15px",
+                            "width": "100%"
+                        }
                     },
-                    "text": { "button": "View & Customize" },
-                    "layout": "horizontal",
-                    "contents": { "img": true, "imgWithCarousel": true, "title": true, "price": true },
-                },
-                "productSet": { "styles": { "products": { "@media (min-width: 601px)": { "margin-left": "-20px" }, "justify-content": "center" } } },
-                "modalProduct": {
-                    "contents": { "img": false, "imgWithCarousel": true, "button": false, "buttonWithQuantity": true },
-                    "styles": { "button": { ":hover": { "background-color": "#4e61a4" }, "background-color": "#576cb6", ":focus": { "background-color": "#4e61a4" }, "border-radius": "11px" } },
-                    "text": { "button": "Add to cart" },
-                    "templates": {
+                    "text": { "button": "Add to Cart" },
+                    "contents": {
+                        "img": true,
+                        "imgWithCarousel": false,
+                        "title": true,
+                        "price": true,
+                        "options": false, // Hide default options dropdown
+                        "button": false, // Hide default button
+                        "description": false,
+                        "quantity": false,
+                        "quantityIncrement": false
+                    },
+                     "templates": {
+                        // This template creates the new customization workflow on the product card
                         "footer": `
-                            <div style='margin-top: 20px; padding-top: 20px; border-top: 1px solid #333; text-align: left;'>
-                                <h3 style='font-family: "Playfair Display", serif; color: white; font-size: 1.25rem; margin-bottom: 15px;'>Add Your Customization</h3>
-                                <div style='margin-bottom: 15px;'>
-                                    <label style='display: block; color: #e0e0e0; margin-bottom: 5px;'>Name to Engrave (Optional)</label>
-                                    <input type="text" name="properties[Name to Engrave]" class="form-input" placeholder="e.g., Emily Johnson">
+                            <div class="shopify-product-form" style="margin-top: 15px;">
+                                <div class="shopify-custom-fields">
+                                    <select name="customization_type" class="form-select" onchange="
+                                        const parent = this.closest('.shopify-product-form');
+                                        const nameField = parent.querySelector('.custom-name-field');
+                                        const designField = parent.querySelector('.custom-design-field');
+                                        nameField.style.display = this.value === 'name' ? 'block' : 'none';
+                                        designField.style.display = this.value === 'design' ? 'block' : 'none';
+                                    ">
+                                        <option value="standard">Standard (As Pictured)</option>
+                                        <option value="name">Add Name/Text</option>
+                                        <option value="design">Custom Design</option>
+                                    </select>
+
+                                    <div class="custom-name-field" style="display:none; margin-top: 10px;">
+                                        <input type="text" name="properties[Name to Engrave]" class="form-input" placeholder="Enter name here...">
+                                    </div>
+
+                                    <div class="custom-design-field" style="display:none; margin-top: 10px;">
+                                         <label style='display: block; color: #aaa; margin-bottom: 5px; font-size: 0.9em;'>Upload your design file:</label>
+                                         <input type="file" name="properties[Custom Design]" class="form-input" style="padding: 0.5rem;">
+                                         <textarea name="properties[Customization Description]" class="form-input" style="margin-top: 10px;" placeholder="Describe your design needs..."></textarea>
+                                    </div>
                                 </div>
-                                <div style='margin-bottom: 15px;'>
-                                    <label style='display: block; color: #e0e0e0; margin-bottom: 5px;'>Customization Description</label>
-                                    <textarea name="properties[Customization Description]" class="form-input" placeholder="e.g., Use 'Adventure' font, place name at the bottom."></textarea>
+                                <div data-element="product.button" style="margin-top:10px;">
+                                    <button class="btn btn-primary w-full">Add to Cart</button>
                                 </div>
-                                <div style='margin-bottom: 15px;'>
-                                    <label style='display: block; color: #e0e0e0; margin-bottom: 5px;'>Upload Custom Design (Requires Shopify Plan with File Uploads)</label>
-                                    <input type="file" name="properties[Custom Design]" class="form-input">
-                                </div>
-                            </div>`
+                            </div>
+                        `
                     }
                 },
+                "productSet": { "styles": { "products": { "@media (min-width: 601px)": { "margin-left": "-20px" }, "justify-content": "center" } } },
+                "modalProduct": { "contents": { "img": false, "imgWithCarousel": true, "button": false, "buttonWithQuantity": true } },
                 "option": {},
                 "cart": {
                     "styles": { "button": { ":hover": { "background-color": "#4e61a4" }, "background-color": "#576cb6", ":focus": { "background-color": "#4e61a4" }, "border-radius": "11px" } },
