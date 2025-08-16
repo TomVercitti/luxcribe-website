@@ -4,9 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Luxcribe - Custom & Pre-Made Laser Engraving</title>
-    <!-- Tailwind CSS CDN -->
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/64_White%20Black%20Modern%20Initial%20Logo-Transparent.png">
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts: Lato for a clean, modern look and Playfair Display for titles -->
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <style>
         html { scroll-behavior: smooth; }
@@ -19,7 +18,7 @@
         .btn-primary { background-color: #6366f1; color: white; }
         .btn-primary:hover { background-color: #4f46e5; transform: translateY(-2px); }
         .btn-secondary { background-color: #333; color: #e0e0e0; border: 1px solid #444; }
-        .btn-secondary:hover, .category-btn.active { background-color: #4f46e5; border-color: #4f46e5; }
+        .btn-secondary:hover, .category-btn.active { background-color: #4f46e5; border-color: #4f46e5; color: white; }
         .card { background-color: #121212; border-radius: 0.75rem; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); overflow: hidden; transition: transform 0.3s ease, box-shadow 0.3s ease; display: flex; flex-direction: column; }
         .card:hover { transform: translateY(-3px); box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4); }
         .card-content { flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; padding: 1.5rem; }
@@ -54,15 +53,14 @@
     </style>
 </head>
 <body>
-    <!-- Header Section -->
     <header id="main-header" class="bg-black bg-opacity-50 backdrop-blur-sm shadow-lg py-2 w-full z-50 rounded-b-lg sticky top-0">
         <div class="container flex justify-between items-center">
-            <a href="#" class="nav-link" data-page="home"><img src="https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/White%20Black%20Modern%20Initial%20Logo%20(1).png" alt="Luxcribe Logo" class="h-12 md:h-16 w-auto object-contain"></a>
+            <a href="#" class="nav-link" data-page="home"><img src="https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/64_White%20Black%20Modern%20Initial%20Logo-Transparent.png" alt="Luxcribe Logo" class="h-12 md:h-16 w-auto object-contain"></a>
             <nav class="hidden md:flex">
                 <ul class="flex space-x-6 items-center">
                     <li><a href="#" class="font-medium nav-link" data-page="home">Home</a></li>
                     <li><a href="#" class="font-medium nav-link" data-page="shop">Shop</a></li>
-                    <li><a href="#" class="font-medium nav-link" data-page="custom-form">Customize an Order</a></li>
+                    <li><a href="#" class="font-medium nav-link" data-page="custom-form">Bulk/Custom Quote</a></li>
                     <li><a href="#" class="font-medium nav-link" data-page="contact">Contact</a></li>
                     <li>
                         <div id="cart-icon" class="relative cursor-pointer">
@@ -81,23 +79,21 @@
         <div id="mobile-menu" class="hidden md:hidden">
              <a href="#" class="block py-2 px-4 text-sm hover:bg-gray-700 nav-link" data-page="home">Home</a>
              <a href="#" class="block py-2 px-4 text-sm hover:bg-gray-700 nav-link" data-page="shop">Shop</a>
-             <a href="#" class="block py-2 px-4 text-sm hover:bg-gray-700 nav-link" data-page="custom-form">Customize an Order</a>
+             <a href="#" class="block py-2 px-4 text-sm hover:bg-gray-700 nav-link" data-page="custom-form">Bulk/Custom Quote</a>
              <a href="#" class="block py-2 px-4 text-sm hover:bg-gray-700 nav-link" data-page="contact">Contact</a>
         </div>
     </header>
 
     <main id="main-content">
-        <!-- Page containers will be dynamically injected here -->
-    </main>
+        </main>
     
-    <!-- Footer -->
     <footer class="bg-[#121212] border-t border-gray-800">
         <div class="container py-12">
             <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
                 <div>
                     <h4 class="font-bold text-lg mb-4">Shop</h4>
                     <ul class="space-y-2 text-gray-400">
-                         <li><a href="#" class="hover:text-white nav-link" data-page="shop">All Products</a></li>
+                          <li><a href="#" class="hover:text-white nav-link" data-page="shop">All Products</a></li>
                     </ul>
                 </div>
                 <div>
@@ -126,18 +122,16 @@
                 </div>
             </div>
             <div id="footer-copyright" class="text-center text-gray-500 mt-12 border-t border-gray-800 pt-8">
-                <!-- Copyright text injected here -->
-            </div>
+                </div>
         </div>
     </footer>
 
-    <!-- Modals -->
     <div id="review-modal" class="modal"><div class="modal-content relative"><span class="close-button absolute top-4 right-6">&times;</span><div id="review-form-container"></div></div></div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, onSnapshot, query, orderBy, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // --- GLOBAL APP STATE ---
         let db, auth, shopifyUI;
@@ -151,7 +145,7 @@
                     <video autoplay loop muted playsinline class="hero-video" poster="https://placehold.co/1920x1080/0a0a0a/333333?text=Luxcribe+Engraving"><source src="https://raw.githubusercontent.com/TomVercitti/luxcribe-website/main/62_Laser_Engraving_Timelapse_Video.mp4" type="video/mp4"></video>
                     <div class="video-overlay"></div><div class="hero-content"><h2 class="text-5xl md:text-6xl font-extrabold mb-4">Your Vision,<br>Laser Crafted.</h2><p class="text-xl md:text-2xl mb-8">Personalized gifts, unique decor, and custom creations.</p></div>
                 </section>
-                <section class="py-20 bg-black"><div class="container"><h3 class="section-title text-4xl md:text-5xl text-center">Shop Our Collections</h3><p class="section-subtitle text-center text-gray-400">Find the perfect item, whether you need a ready-to-ship gift or a fully personalized creation.</p><div class="grid grid-cols-1 md:grid-cols-2 gap-8"><div class="card p-8 text-center bg-gray-900"><h4 class="text-3xl font-bold mb-4">Our Products</h4><p class="text-gray-400 mb-6 flex-grow">Browse our curated collection of ready-to-ship designs, perfect for last-minute gifts.</p><button class="btn btn-primary nav-link" data-page="shop">View All Products</button></div><div class="card p-8 text-center bg-gray-900"><h4 class="text-3xl font-bold mb-4">Customize Your Product</h4><p class="text-gray-400 mb-6 flex-grow">Have a unique idea? Start from scratch and create a one-of-a-kind item with our help.</p><button class="btn btn-primary nav-link" data-page="custom-form">Start Your Custom Order</button></div></div></div></section>
+                <section class="py-20 bg-black"><div class="container"><h3 class="section-title text-4xl md:text-5xl text-center">Shop Our Collections</h3><p class="section-subtitle text-center text-gray-400">Find the perfect item, whether you need a ready-to-ship gift or a fully personalized creation.</p><div class="grid grid-cols-1 md:grid-cols-2 gap-8"><div class="card p-8 text-center bg-gray-900"><h4 class="text-3xl font-bold mb-4">Our Products</h4><p class="text-gray-400 mb-6 flex-grow">Browse our curated collection of ready-to-ship designs, perfect for last-minute gifts.</p><button class="btn btn-primary nav-link" data-page="shop">View All Products</button></div><div class="card p-8 text-center bg-gray-900"><h4 class="text-3xl font-bold mb-4">Bulk or Complex Orders</h4><p class="text-gray-400 mb-6 flex-grow">Have a unique idea or need a large quantity? Start from scratch and get a custom quote.</p><button class="btn btn-primary nav-link" data-page="custom-form">Get a Custom Quote</button></div></div></div></section>
                 <section id="reviews" class="py-20 bg-gray-950"><div class="container"><h3 class="section-title text-4xl md:text-5xl text-center">What Our Customers Say</h3><div class="review-slider-container max-w-3xl mx-auto mt-8"><div class="review-slider"></div></div><div class="text-center mt-8"><button class="btn btn-primary" id="leave-review-btn">Leave a Review</button></div></div></section>
             </div>`;
 
@@ -160,14 +154,12 @@
                 <section class="py-20 bg-black">
                     <div class="container">
                         <h2 class="section-title text-4xl md:text-5xl text-center">All Products</h2>
-                        <div class="my-8 max-w-lg mx-auto"><input type="search" id="product-search" placeholder="Search for products..." class="form-input"></div>
                         <div class="flex justify-center flex-wrap gap-4 my-8">
                             <button class="btn btn-secondary category-btn active" data-collection-id="455555776757">All</button>
-                            <!-- IMPORTANT: Replace YOUR_COLLECTION_ID with the actual ID from your Shopify admin URL -->
-                            <button class="btn btn-secondary category-btn" data-collection-id="YOUR_DRINKWARE_ID">Drinkware & Barware</button>
-                            <button class="btn btn-secondary category-btn" data-collection-id="YOUR_COASTERS_ID">Coasters</button>
-                            <button class="btn btn-secondary category-btn" data-collection-id="YOUR_PET_PRODUCTS_ID">Pet Products</button>
-                            <button class="btn btn-secondary category-btn" data-collection-id="YOUR_WALLETS_ID">Wallets</button>
+                            <button class="btn btn-secondary category-btn" data-collection-id="456123789012">Drinkware & Barware</button>
+                            <button class="btn btn-secondary category-btn" data-collection-id="456123821780">Coasters</button>
+                            <button class="btn btn-secondary category-btn" data-collection-id="456123854548">Pet Products</button>
+                            <button class="btn btn-secondary category-btn" data-collection-id="456123887316">Wallets</button>
                         </div>
                         <div id='collection-component-container'></div>
                     </div>
@@ -178,15 +170,14 @@
             <div id="custom-form-page" class="page">
                 <section id="how-to-order" class="py-20 bg-gray-950">
                     <div class="container max-w-2xl mx-auto">
-                        <h3 class="section-title text-4xl md:text-5xl text-center">Customize Your Order</h3>
-                        <p class="section-subtitle text-center text-gray-400">Fill out the details below. We'll email you a design proof and payment instructions.</p>
+                        <h3 class="section-title text-4xl md:text-5xl text-center">Bulk or Custom Quote</h3>
+                        <p class="section-subtitle text-center text-gray-400">For large orders or complex designs not covered by product options, please fill out the form below. We'll email you a design proof and payment instructions.</p>
                         <form id="custom-order-form" class="space-y-6 bg-[#121212] p-8 rounded-lg">
                             <div><label class="block mb-2">Full Name *</label><input type="text" name="name" required class="form-input"></div>
                             <div><label class="block mb-2">Email *</label><input type="email" name="email" required class="form-input"></div>
-                            <div><label class="block mb-2">Customization Details *</label><textarea name="details" id="order-summary" rows="6" required class="form-input" placeholder="Describe your design, text, fonts, and placement."></textarea></div>
+                            <div><label class="block mb-2">Customization Details *</label><textarea name="details" id="order-summary" rows="6" required class="form-input" placeholder="Describe your design, text, fonts, and placement. Include estimated quantities for bulk orders."></textarea></div>
                             <div><label class="block mb-2">Upload Your Design (if applicable)</label><input type="file" name="file" class="form-input"></div>
-                            <div class="pt-4"><label class="flex items-center"><input type="checkbox" id="bulk-order-checkbox" name="is-bulk" class="h-5 w-5 mr-3"><span class="text-lg">Is this a bulk or corporate order?</span></label><div id="bulk-order-fields" class="hidden space-y-4 mt-4 pl-8"><div><label class="block mb-2">Company Name</label><input type="text" name="company" class="form-input"></div><div><label class="block mb-2">Estimated Quantity</label><input type="number" name="quantity" class="form-input"></div></div></div>
-                            <button type="submit" class="btn btn-primary w-full !mt-8">Submit Customization Request</button>
+                            <button type="submit" class="btn btn-primary w-full !mt-8">Submit Quote Request</button>
                         </form>
                     </div>
                 </section>
@@ -225,48 +216,12 @@
             </div>`;
 
         const pageContent = {
-            faq: { title: "Frequently Asked Questions", content: `
-                <h2>How long do orders take?</h2><p>Processing (engraving) time for personalised items is 4–5 business days. Shipping time depends on the chosen carrier and service.</p>
-                <h2>What file types do you accept?</h2><p>Preferred: vector files (SVG, AI, EPS, PDF). High-resolution raster files (PNG, JPEG) at 300 DPI are acceptable for photo-style engravings.</p>
-                <h2>Can you engrave any material?</h2><p>We commonly engrave wood, glass, acrylic, anodised metals, leather and many plastics. Some food-contact plastics or unknown composites may be unsuitable — we’ll advise if needed.</p>
-                <h2>Can I cancel or change my order?</h2><p>Changes or cancellations are possible only while the order status is still Processing. Contact us immediately and we’ll do our best to help.</p>
-                <h2>Are personalised items refundable?</h2><p>Personalised items are not accepted for change-of-mind returns due to their custom nature. This does not affect your rights under the Australian Consumer Law if the product is faulty or does not meet consumer guarantees.</p>
-                <h2>What if my item arrives faulty or damaged?</h2><p>If an item is faulty or damaged we will repair, replace or refund in accordance with the Australian Consumer Law. Please email photos and your order number so we can assess the issue.</p>
-            ` },
+            faq: { title: "Frequently Asked Questions", content: `<h2>How long do orders take?</h2><p>Processing (engraving) time for personalised items is 4–5 business days. Shipping time depends on the chosen carrier and service.</p><h2>What file types do you accept?</h2><p>Preferred: vector files (SVG, AI, EPS, PDF). High-resolution raster files (PNG, JPEG) at 300 DPI are acceptable for photo-style engravings.</p><h2>Can you engrave any material?</h2><p>We commonly engrave wood, glass, acrylic, anodised metals, leather and many plastics. Some food-contact plastics or unknown composites may be unsuitable — we’ll advise if needed.</p><h2>Can I cancel or change my order?</h2><p>Changes or cancellations are possible only while the order status is still Processing. Contact us immediately and we’ll do our best to help.</p><h2>Are personalised items refundable?</h2><p>Personalised items are not accepted for change-of-mind returns due to their custom nature. This does not affect your rights under the Australian Consumer Law if the product is faulty or does not meet consumer guarantees.</p><h2>What if my item arrives faulty or damaged?</h2><p>If an item is faulty or damaged we will repair, replace or refund in accordance with the Australian Consumer Law. Please email photos and your order number so we can assess the issue.</p>` },
             "track-order": { title: "Track Your Order", content: `<p>Once your order ships you will receive a dispatch email with a tracking number and link. Use the tracking link to follow delivery updates on the carrier’s website. If there’s a delivery issue, email <a href="mailto:swapnil.poudyal008@gmail.com" class="text-indigo-400 hover:underline">swapnil.poudyal008@gmail.com</a> with your order number and we will investigate and assist with the carrier.</p>` },
-            shipping: { title: "Shipping & Delivery", content: `
-                <h2>Processing time</h2><p>4–5 business days for personalised items (from order acceptance to dispatch).</p>
-                <h2>Carriers</h2><p>Domestic shipments are sent via Australia Post and selected local couriers depending on the service chosen at checkout.</p>
-                <h2>Shipping cost</h2><p>Calculated at checkout. Free standard shipping for orders over $150 AUD.</p>
-                <h2>Dispatch notice</h2><p>You’ll get an order confirmation when payment is taken and a dispatch email with tracking when your order leaves our studio.</p>
-                <h2>International</h2><p>Available on request; international customers are responsible for customs, duties and taxes.</p>
-                <h2>Delays</h2><p>Carrier or weather delays may extend delivery times; we will notify you if significant delays occur.</p>
-            ` },
-            returns: { title: "Returns & Refunds", content: `
-                <h2>Overview</h2><p>We aim to be fair while protecting our small business. All refunds, returns and repairs are handled in accordance with the Australian Consumer Law (ACL). If a product has a major problem you may choose a refund or replacement; for minor problems we may offer repair.</p>
-                <h2>Personalised items</h2><p>Custom / personalised products are not eligible for change-of-mind returns. Please check spelling and design carefully before confirming your order.</p>
-                <h2>Non-personalised items</h2><p>May be returned for change-of-mind within 14 days of delivery if unused, in original condition and packaging. Return postage for change-of-mind is paid by the buyer.</p>
-                <h2>Faulty/damaged items</h2><p>If an item is faulty, damaged in transit or materially not as described, email <a href="mailto:swapnil.poudyal008@gmail.com" class="text-indigo-400 hover:underline">swapnil.poudyal008@gmail.com</a> with photos and your order number. We will assess the issue and where appropriate provide a repair, replacement or refund at no cost to you. If we ask for the item back for inspection and the fault is confirmed, we will cover reasonable return postage.</p>
-                <h2>How to request a return/repair/refund</h2><p>Email <a href="mailto:swapnil.poudyal008@gmail.com" class="text-indigo-400 hover:underline">swapnil.poudyal008@gmail.com</a> with your order number, photos and a brief description. We aim to reply within 1 business day.</p>
-                <h2>Escalation</h2><p>If you remain unsatisfied, you may contact NSW Fair Trading or the ACCC for dispute resolution guidance.</p>
-            ` },
-            privacy: { title: "Privacy Policy", content: `
-                <h2>Summary</h2><p>Luxcribe collects personal information to process orders, deliver products and provide customer service. We follow the Privacy Act and the Australian Privacy Principles (APPs).</p>
-                <h2>What we collect</h2><ul><li>Name, email, phone, postal address</li><li>Order/payment details (processed by a third party; we do not store full card numbers)</li><li>Artwork files you upload</li><li>Website analytics and cookies.</li></ul>
-                <h2>How we use it</h2><p>To fulfil orders, communicate about orders and returns, process payments and (with consent) send marketing. We do not sell your personal information.</p>
-                <h2>Sharing</h2><p>We may share order details with couriers and payment processors; some third-party services may be located overseas — we take reasonable steps to protect your information.</p>
-                <h2>Access/correction</h2><p>Email <a href="mailto:swapnil.poudyal008@gmail.com" class="text-indigo-400 hover:underline">swapnil.poudyal008@gmail.com</a> to request access or correction.</p>
-                <h2>Security/retention</h2><p>We use reasonable measures to protect personal information and retain it only as required for business or legal obligations.</p>
-            ` },
-            terms: { title: "Terms of Service", content: `
-                <h2>Acceptance</h2><p>By placing an order with Luxcribe you agree to these Terms.</p>
-                <h2>Business details</h2><p>Luxcribe — Operator: Swapnil Poudyal (sole trader) — ABN 92 274 540 850 — Address: 64 Jersey Avenue, Mortdale NSW 2223 — Governing law: New South Wales, Australia.</p>
-                <h2>Orders</h2><p>Orders are accepted when payment is processed and an order confirmation is sent. We may refuse or cancel orders in limited circumstances; refunded promptly if cancelled after payment.</p>
-                <h2>Pricing & GST</h2><p>Prices include GST where applicable. Payments are processed by secure third-party providers; Luxcribe does not store full card details.</p>
-                <h2>Intellectual property</h2><p>You warrant you own or are licensed to use any designs or images you upload. Luxcribe retains copyright in its website content and templates.</p>
-                <h2>Consumer guarantees & liability</h2><p>Nothing in these Terms attempts to exclude your rights under the Australian Consumer Law. To the extent permitted by law, Luxcribe’s liability is limited to remedies required under ACL.</p>
-                <h2>Changes to terms</h2><p>We may update terms; material changes will be posted and customers notified where relevant.</p>
-            ` }
+            shipping: { title: "Shipping & Delivery", content: `<h2>Processing time</h2><p>4–5 business days for personalised items (from order acceptance to dispatch).</p><h2>Carriers</h2><p>Domestic shipments are sent via Australia Post and selected local couriers depending on the service chosen at checkout.</p><h2>Shipping cost</h2><p>Calculated at checkout. Free standard shipping for orders over $150 AUD.</p><h2>Dispatch notice</h2><p>You’ll get an order confirmation when payment is taken and a dispatch email with tracking when your order leaves our studio.</p><h2>International</h2><p>Available on request; international customers are responsible for customs, duties and taxes.</p><h2>Delays</h2><p>Carrier or weather delays may extend delivery times; we will notify you if significant delays occur.</p>` },
+            returns: { title: "Returns & Refunds", content: `<h2>Overview</h2><p>We aim to be fair while protecting our small business. All refunds, returns and repairs are handled in accordance with the Australian Consumer Law (ACL). If a product has a major problem you may choose a refund or replacement; for minor problems we may offer repair.</p><h2>Personalised items</h2><p>Custom / personalised products are not eligible for change-of-mind returns. Please check spelling and design carefully before confirming your order.</p><h2>Non-personalised items</h2><p>May be returned for change-of-mind within 14 days of delivery if unused, in original condition and packaging. Return postage for change-of-mind is paid by the buyer.</p><h2>Faulty/damaged items</h2><p>If an item is faulty, damaged in transit or materially not as described, email <a href="mailto:swapnil.poudyal008@gmail.com" class="text-indigo-400 hover:underline">swapnil.poudyal008@gmail.com</a> with photos and your order number. We will assess the issue and where appropriate provide a repair, replacement or refund at no cost to you. If we ask for the item back for inspection and the fault is confirmed, we will cover reasonable return postage.</p><h2>How to request a return/repair/refund</h2><p>Email <a href="mailto:swapnil.poudyal008@gmail.com" class="text-indigo-400 hover:underline">swapnil.poudyal008@gmail.com</a> with your order number, photos and a brief description. We aim to reply within 1 business day.</p><h2>Escalation</h2><p>If you remain unsatisfied, you may contact NSW Fair Trading or the ACCC for dispute resolution guidance.</p>` },
+            privacy: { title: "Privacy Policy", content: `<h2>Summary</h2><p>Luxcribe collects personal information to process orders, deliver products and provide customer service. We follow the Privacy Act and the Australian Privacy Principles (APPs).</p><h2>What we collect</h2><ul><li>Name, email, phone, postal address</li><li>Order/payment details (processed by a third party; we do not store full card numbers)</li><li>Artwork files you upload</li><li>Website analytics and cookies.</li></ul><h2>How we use it</h2><p>To fulfil orders, communicate about orders and returns, process payments and (with consent) send marketing. We do not sell your personal information.</p><h2>Sharing</h2><p>We may share order details with couriers and payment processors; some third-party services may be located overseas — we take reasonable steps to protect your information.</p><h2>Access/correction</h2><p>Email <a href="mailto:swapnil.poudyal008@gmail.com" class="text-indigo-400 hover:underline">swapnil.poudyal008@gmail.com</a> to request access or correction.</p><h2>Security/retention</h2><p>We use reasonable measures to protect personal information and retain it only as required for business or legal obligations.</p>` },
+            terms: { title: "Terms of Service", content: `<h2>Acceptance</h2><p>By placing an order with Luxcribe you agree to these Terms.</p><h2>Business details</h2><p>Luxcribe — Operator: Swapnil Poudyal (sole trader) — ABN 92 274 540 850 — Address: 64 Jersey Avenue, Mortdale NSW 2223 — Governing law: New South Wales, Australia.</p><h2>Orders</h2><p>Orders are accepted when payment is processed and an order confirmation is sent. We may refuse or cancel orders in limited circumstances; refunded promptly if cancelled after payment.</p><h2>Pricing & GST</h2><p>Prices include GST where applicable. Payments are processed by secure third-party providers; Luxcribe does not store full card details.</p><h2>Intellectual property</h2><p>You warrant you own or are licensed to use any designs or images you upload. Luxcribe retains copyright in its website content and templates.</p><h2>Consumer guarantees & liability</h2><p>Nothing in these Terms attempts to exclude your rights under the Australian Consumer Law. To the extent permitted by law, Luxcribe’s liability is limited to remedies required under ACL.</p><h2>Changes to terms</h2><p>We may update terms; material changes will be posted and customers notified where relevant.</p>` }
         };
         
         // --- ROUTING & PAGE DISPLAY ---
@@ -280,6 +235,8 @@
             else if (pageContent[page]) {
                 const { title, content: pageHTML } = pageContent[page];
                 content = renderInfoPage(title, pageHTML);
+            } else {
+                content = renderHomePage(); // Fallback to home
             }
             mainContent.innerHTML = content;
             mainContent.querySelector('.page').classList.add('active');
@@ -287,32 +244,108 @@
             if (page === 'home') initReviewSlider();
             if (page === 'shop') {
                 initializeShopifyCollection("455555776757"); // Default to "All" collection
-                document.querySelectorAll('.category-btn').forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
-                        e.target.classList.add('active');
-                        const collectionId = e.target.dataset.collectionId;
-                        initializeShopifyCollection(collectionId);
-                    });
-                });
             }
         };
 
         // --- SHOPIFY INTEGRATION ---
         function initializeShopifyCollection(collectionId) {
-            if (!shopifyUI) return;
+            if (!shopifyUI || !collectionId) return;
             const container = document.getElementById('collection-component-container');
             if (!container) return;
             container.innerHTML = ''; // Clear previous collection
             const newId = `collection-component-${Date.now()}`;
             container.innerHTML = `<div id="${newId}"></div>`;
 
+            const productOptions = {
+                "product": {
+                    "styles": { 
+                        "product": { "@media (min-width: 601px)": { "max-width": "calc(25% - 20px)", "margin-left": "20px", "margin-bottom": "50px", "width": "calc(25% - 20px)" }, "text-align": "center" }, 
+                        "title": { "color": "#ffffff" }, "price": { "color": "#e0e0e0" }, 
+                        "button": { ":hover": { "background-color": "#4e61a4" }, "background-color": "#576cb6", ":focus": { "background-color": "#4e61a4" }, "border-radius": "11px" } 
+                    },
+                    "text": { "button": "View & Customize" },
+                    "layout": "horizontal",
+                    "contents": { "img": true, "imgWithCarousel": true, "title": true, "price": true },
+                },
+                "productSet": { "styles": { "products": { "@media (min-width: 601px)": { "margin-left": "-20px" }, "justify-content": "center" } } },
+                "modalProduct": {
+                    "contents": { "img": false, "imgWithCarousel": true, "button": false, "buttonWithQuantity": true },
+                    "styles": { "button": { ":hover": { "background-color": "#4e61a4" }, "background-color": "#576cb6", ":focus": { "background-color": "#4e61a4" }, "border-radius": "11px" } },
+                    "text": { "button": "Add to cart" },
+                    "templates": {
+                        "footer": `
+                            <div style='margin-top: 20px; padding-top: 20px; border-top: 1px solid #333; text-align: left;'>
+                                <h3 style='font-family: "Playfair Display", serif; color: white; font-size: 1.25rem; margin-bottom: 15px;'>Add Your Customization</h3>
+                                <div style='margin-bottom: 15px;'>
+                                    <label style='display: block; color: #e0e0e0; margin-bottom: 5px;'>Name to Engrave (Optional)</label>
+                                    <input type="text" name="properties[Name to Engrave]" class="form-input" placeholder="e.g., Emily Johnson">
+                                </div>
+                                <div style='margin-bottom: 15px;'>
+                                    <label style='display: block; color: #e0e0e0; margin-bottom: 5px;'>Customization Description</label>
+                                    <textarea name="properties[Customization Description]" class="form-input" placeholder="e.g., Use 'Adventure' font, place name at the bottom."></textarea>
+                                </div>
+                                <div style='margin-bottom: 15px;'>
+                                    <label style='display: block; color: #e0e0e0; margin-bottom: 5px;'>Upload Custom Design (Requires Shopify Plan with File Uploads)</label>
+                                    <input type="file" name="properties[Custom Design]" class="form-input">
+                                </div>
+                            </div>`
+                    }
+                },
+                "option": {},
+                "cart": {
+                    "styles": { "button": { ":hover": { "background-color": "#4e61a4" }, "background-color": "#576cb6", ":focus": { "background-color": "#4e61a4" }, "border-radius": "11px" } },
+                    "text": { "total": "Subtotal", "button": "Checkout" },
+                    "contents": { "note": true },
+                    "events": { afterRender: (cart) => { const cartBadge = document.getElementById('cart-badge'); if (cart) { const count = cart.lineItems.reduce((acc, item) => acc + item.quantity, 0); cartBadge.textContent = count; cartBadge.classList.toggle('hidden', count === 0); } } }
+                },
+                "toggle": { "styles": { "toggle": { "display": "none" } } }
+            };
+
             shopifyUI.createComponent('collection', {
                 id: collectionId,
                 node: document.getElementById(newId),
                 moneyFormat: '%24%7B%7Bamount%7D%7D',
-                options: { "product": { "styles": { "product": { "@media (min-width: 601px)": { "max-width": "calc(25% - 20px)", "margin-left": "20px", "margin-bottom": "50px", "width": "calc(25% - 20px)" }, "text-align": "center" }, "title": { "color": "#ffffff" }, "price": { "color": "#e0e0e0" }, "button": { ":hover": { "background-color": "#4e61a4" }, "background-color": "#576cb6", ":focus": { "background-color": "#4e61a4" }, "border-radius": "11px", "padding-left": "66px", "padding-right": "66px" } }, "text": { "button": "Add to cart" } }, "productSet": { "styles": { "products": { "@media (min-width: 601px)": { "margin-left": "-20px" }, "justify-content": "center" } } }, "modalProduct": { "contents": { "img": false, "imgWithCarousel": true, "button": false, "buttonWithQuantity": true }, "styles": { "product": { "@media (min-width: 601px)": { "max-width": "100%", "margin-left": "0px", "margin-bottom": "0px" } }, "button": { ":hover": { "background-color": "#4e61a4" }, "background-color": "#576cb6", ":focus": { "background-color": "#4e61a4" }, "border-radius": "11px", "padding-left": "66px", "padding-right": "66px" } }, "text": { "button": "Add to cart" } }, "option": {}, "cart": { "styles": { "button": { ":hover": { "background-color": "#4e61a4" }, "background-color": "#576cb6", ":focus": { "background-color": "#4e61a4" }, "border-radius": "11px" } }, "text": { "total": "Subtotal", "button": "Checkout" }, "events": { afterRender: (cart) => { const cartBadge = document.getElementById('cart-badge'); if (cart) { const count = cart.lineItems.reduce((acc, item) => acc + item.quantity, 0); cartBadge.textContent = count; cartBadge.classList.toggle('hidden', count === 0); } } } }, "toggle": { "styles": { "toggle": { "display": "none" } } } },
+                options: productOptions,
             });
+        }
+
+        // --- REVIEW LOGIC ---
+        function initReviewSlider() {
+            const slider = document.querySelector('.review-slider');
+            if (!slider || !db) return;
+
+            const reviewsCollectionRef = collection(db, "reviews");
+            const q = query(reviewsCollectionRef, orderBy('timestamp', 'desc'));
+
+            onSnapshot(q, (snapshot) => {
+                if (snapshot.empty) {
+                    slider.innerHTML = '<p class="text-gray-500 text-center w-full">No reviews yet. Be the first!</p>';
+                    return;
+                }
+                slider.innerHTML = snapshot.docs.map(doc => {
+                    const review = doc.data();
+                    const stars = '<span class="text-yellow-400">' + '&#9733;'.repeat(review.rating) + '</span>' + '<span class="text-gray-600">' + '&#9733;'.repeat(5 - review.rating) + '</span>';
+                    return `<div class="review-slide"><div class="card p-6"><div class="text-2xl">${stars}</div><p class="text-gray-300 mt-4">"${review.reviewText}"</p><h5 class="text-lg font-bold text-white mt-4">- ${review.name}</h5></div></div>`;
+                }).join('');
+            }, (error) => {
+                console.error("Error fetching reviews:", error);
+                slider.innerHTML = '<p class="text-red-500 text-center w-full">Could not load reviews.</p>';
+            });
+        }
+
+        function showReviewModal() {
+            const reviewModal = document.getElementById('review-modal');
+            const reviewFormContainer = document.getElementById('review-form-container');
+            reviewFormContainer.innerHTML = `
+                <h3 class="text-2xl font-bold text-white mb-4">Leave a Review</h3>
+                <form id="review-form" class="space-y-6 text-left">
+                    <div><label for="review-name" class="block text-sm font-medium text-gray-400">Your Name *</label><input type="text" name="name" id="review-name" required class="mt-1 block w-full form-input"></div>
+                    <div><label for="review-text" class="block text-sm font-medium text-gray-400">Your Review *</label><textarea name="reviewText" id="review-text" rows="4" required class="mt-1 block w-full form-input"></textarea></div>
+                    <div><label class="block text-sm font-medium text-gray-400 mb-2">Rating *</label><div class="star-rating flex justify-start gap-1">${[1,2,3,4,5].map(i => `<span class="star" data-value="${i}">&#9733;</span>`).join('')}</div><input type="hidden" name="rating" id="rating-input" required></div>
+                    <button type="submit" class="btn btn-primary w-full">Submit Review</button>
+                </form>
+            `;
+            reviewModal.style.display = 'flex';
         }
 
         // --- EVENT LISTENERS ---
@@ -323,27 +356,93 @@
                     e.preventDefault();
                     navigateTo(navLink.dataset.page);
                 }
+                
                 if(e.target.id === 'leave-review-btn') {
                     showReviewModal();
                 }
+
                 const mobileMenuButton = e.target.closest('#mobile-menu-button');
                 if(mobileMenuButton) {
                     document.getElementById('mobile-menu').classList.toggle('hidden');
                 }
+
                 const cartIcon = e.target.closest('#cart-icon');
-                if (cartIcon && shopifyUI && shopifyUI.components.cart && shopifyUI.components.cart[0]) {
+                if (cartIcon && shopifyUI?.components?.cart?.[0]) {
                     shopifyUI.components.cart[0].toggle.setVisible(true);
+                }
+                
+                const categoryBtn = e.target.closest('.category-btn');
+                if (categoryBtn) {
+                    document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                    categoryBtn.classList.add('active');
+                    const collectionId = categoryBtn.dataset.collectionId;
+                    initializeShopifyCollection(collectionId);
+                }
+
+                const star = e.target.closest('.star-rating .star');
+                if (star) {
+                    const rating = star.dataset.value;
+                    const starsContainer = star.parentElement;
+                    starsContainer.querySelector('#rating-input').value = rating;
+                    starsContainer.querySelectorAll('.star').forEach(s => {
+                        s.classList.toggle('active', s.dataset.value <= rating);
+                    });
+                }
+                
+                const closeButton = e.target.closest('.close-button');
+                if (closeButton) {
+                    closeButton.closest('.modal').style.display = 'none';
+                }
+            });
+
+            document.body.addEventListener('submit', async (e) => {
+                if (e.target.id === 'custom-order-form') {
+                    e.preventDefault();
+                    const formData = new FormData(e.target);
+                    const name = formData.get('name');
+                    const email = formData.get('email');
+                    const details = formData.get('details');
+                    const subject = `Custom Quote Request from ${name}`;
+                    const body = `Name: ${name}\nEmail: ${email}\n\nDetails:\n${details}`;
+                    window.location.href = `mailto:swapnil.poudyal008@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                    alert("Thank you! Please send the pre-filled email to complete your request.");
+                    e.target.reset();
+                }
+
+                if (e.target.id === 'review-form') {
+                    e.preventDefault();
+                    const form = e.target;
+                    const formData = new FormData(form);
+                    const name = formData.get('name').trim();
+                    const reviewText = formData.get('reviewText').trim();
+                    const rating = parseInt(formData.get('rating'), 10);
+
+                    if (!name || !reviewText || !rating) {
+                        alert("Please fill out all fields and provide a rating.");
+                        return;
+                    }
+                    
+                    try {
+                        const reviewsCollectionRef = collection(db, "reviews");
+                        await addDoc(reviewsCollectionRef, {
+                            name: name,
+                            reviewText: reviewText,
+                            rating: rating,
+                            timestamp: serverTimestamp()
+                        });
+                        form.closest('.modal').style.display = 'none';
+                        alert("Thank you for your review!");
+                    } catch (error) {
+                        console.error("Error adding review: ", error);
+                        alert("Sorry, there was an error submitting your review. Please try again.");
+                    }
                 }
             });
         }
 
-        // --- REVIEW LOGIC ---
-        function initReviewSlider() { /* ... review logic ... */ }
-        function showReviewModal() { /* ... review modal logic ... */ }
-
         // --- INITIALIZE APP ---
         function init() {
-            const userFirebaseConfig = {
+            const firebaseConfig = {
                 apiKey: "AIzaSyC4oVD1XhXjng2yx6kgHBt_XgZY8TpcxS8",
                 authDomain: "luxcribe.firebaseapp.com",
                 projectId: "luxcribe",
@@ -353,12 +452,8 @@
                 measurementId: "G-JV136NC23K"
             };
 
-            const finalFirebaseConfig = (typeof __firebase_config !== 'undefined' && Object.keys(JSON.parse(__firebase_config)).length > 0)
-                ? JSON.parse(__firebase_config)
-                : userFirebaseConfig;
-
             try {
-                const app = initializeApp(finalFirebaseConfig);
+                const app = initializeApp(firebaseConfig);
                 db = getFirestore(app);
                 auth = getAuth(app);
                 signInAnonymously(auth).catch(console.error);
